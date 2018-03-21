@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace NssApp.RestApi
 {
@@ -43,7 +43,7 @@ namespace NssApp.RestApi
         {
             get
             {
-                switch (this.TrafficLightStatus)
+                switch (TrafficLightStatus)
                 {
                     case "Red":
                         return "Red";
@@ -62,12 +62,12 @@ namespace NssApp.RestApi
 
     public class ApiResult<T>
     {
-       public T Data { get; set; }
+        public T Data { get; set; }
     }
 
     public class NssRestApi
     {
-        private static HttpClient httpClient = new HttpClient()
+        private static readonly HttpClient HttpClient = new HttpClient
         {
             BaseAddress = new Uri("https://uat.biomni.com/DevNetBackupNetBackupAdapterPanels/Api/")
         };
@@ -78,12 +78,9 @@ namespace NssApp.RestApi
         {
             try
             {
-                System.Net.ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) =>
-                {
-                    return true;
-                };
+                System.Net.ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => { return true; };
 
-                var result = await httpClient.PostAsync("auth/token", new FormUrlEncodedContent(new KeyValuePair<string, string>[]
+                var result = await HttpClient.PostAsync("auth/token", new FormUrlEncodedContent(new[]
                 {
                     new KeyValuePair<string, string>("grant_type", "password"),
                     new KeyValuePair<string, string>("username", username),
@@ -94,7 +91,7 @@ namespace NssApp.RestApi
                 {
                     var jsonText = await result.Content.ReadAsStringAsync();
                     LoginResponse = JsonConvert.DeserializeObject<LoginResponse>(jsonText);
-                    httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", LoginResponse.AccessToken);
+                    HttpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", LoginResponse.AccessToken);
                     return true;
                 }
             }
@@ -109,9 +106,9 @@ namespace NssApp.RestApi
         public async Task<List<Machine>> GetComputers()
         {
             var machines = new List<Machine>();
-            
-            var result = await httpClient.GetAsync("v6/machines?$top=20&$skip=0");//;?$filter=CustomerCode eq 'Acme'&$top=10&$skip=0&$count=true");
-            if(result.StatusCode == System.Net.HttpStatusCode.OK)
+
+            var result = await HttpClient.GetAsync("v6/machines?$top=20&$skip=0"); //;?$filter=CustomerCode eq 'Acme'&$top=10&$skip=0&$count=true");
+            if (result.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var jsonText = await result.Content.ReadAsStringAsync();
                 var apiResult = JsonConvert.DeserializeObject<ApiResult<List<Machine>>>(jsonText);
