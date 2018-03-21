@@ -69,9 +69,7 @@ namespace NssApp.RestApi
     {
         private static HttpClient httpClient = new HttpClient()
         {
-            //https://biomrich2.uk.biomni.com/DirectaTrunkNetBackupAdapterPanels/Api/help/index#!/Authentication/OAuth2TokenPost
-            // BaseAddress = new Uri("https://biomrich2.uk.biomni.com/DirectaTrunkNetBackupAdapterPanels/Api/")
-            BaseAddress = new Uri("https://192.168.157.1/DirectaTrunkNetBackupAdapterPanels/Api/")
+            BaseAddress = new Uri("https://uat.biomni.com/DevNetBackupNetBackupAdapterPanels/Api/")
         };
 
         private static LoginResponse LoginResponse { get; set; }
