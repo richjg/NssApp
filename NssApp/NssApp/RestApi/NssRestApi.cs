@@ -110,7 +110,7 @@ namespace NssApp.RestApi
         {
             var machines = new List<Machine>();
             
-            var result = await httpClient.GetAsync("v6/machines?$top=10&$skip=0");//;?$filter=CustomerCode eq 'Acme'&$top=10&$skip=0&$count=true");
+            var result = await httpClient.GetAsync("v6/machines?$top=20&$skip=0");//;?$filter=CustomerCode eq 'Acme'&$top=10&$skip=0&$count=true");
             if(result.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var jsonText = await result.Content.ReadAsStringAsync();
