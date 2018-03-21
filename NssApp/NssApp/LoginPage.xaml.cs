@@ -19,7 +19,7 @@ namespace NssApp
        
         async void OnLoginButtonClicked(object sender, EventArgs e)
         {
-            var isValid = await App.NssRestApi.Login(usernameEntry.Text, passwordEntry.Text);
+            var isValid = await App.NssRestApi.Login(UsernameEntry.Text, PasswordEntry.Text);
             if (isValid)
             {
                 App.IsUserLoggedIn = true;
@@ -28,8 +28,8 @@ namespace NssApp
             }
             else
             {
-                messageLabel.Text = "Login failed";
-                passwordEntry.Text = string.Empty;
+                MessageLabel.Text = "Login failed";
+                PasswordEntry.Text = string.Empty;
             }
         }
     }
