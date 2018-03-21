@@ -7,9 +7,9 @@ using Xamarin.Forms.Xaml;
 namespace NssApp
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class DashBoard : ContentPage
+    public partial class Machines : ContentPage
     {
-        public DashBoard()
+        public Machines()
         {
             InitializeComponent();
         }
@@ -18,11 +18,7 @@ namespace NssApp
         {
             try
             {
-                var trafficLightCounts = await App.NssRestApi.GetTrafficLightCounts();
-
-                RedCount.Text = trafficLightCounts.RedCount;
-                AmberCount.Text = trafficLightCounts.AmberCount;
-                GreenCount.Text = trafficLightCounts.GreenCount;
+                machineList.ItemsSource = await App.NssRestApi.GetComputers();
             }
             catch (Exception e)
             {

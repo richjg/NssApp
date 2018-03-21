@@ -60,6 +60,13 @@ namespace NssApp.RestApi
         }
     }
 
+    public class TrafficLightCounts
+    {
+        public string RedCount { get; set; }
+        public string AmberCount { get; set; }
+        public string GreenCount { get; set; }
+    }
+
     public class ApiResult<T>
     {
         public T Data { get; set; }
@@ -116,6 +123,21 @@ namespace NssApp.RestApi
             }
 
             return machines;
+        }
+
+        public async Task<TrafficLightCounts> GetTrafficLightCounts()
+        {
+            var trafficLightCounts = new TrafficLightCounts();
+
+            var result = await HttpClient.GetAsync("v6/trafficlights/self");
+            if (result.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var jsonText = await result.Content.ReadAsStringAsync();
+                var apiResult = JsonConvert.DeserializeObject<ApiResult<TrafficLightCounts>>(jsonText);
+                trafficLightCounts = apiResult.Data;
+            }
+
+            return trafficLightCounts;
         }
     }
 }
