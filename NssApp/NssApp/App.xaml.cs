@@ -22,7 +22,7 @@ namespace NssApp
             }
             else
             {
-                MainPage = new NavigationPage(new DashBoard());
+                MainPage = new NavigationPage(new Master());
             }
         }
 

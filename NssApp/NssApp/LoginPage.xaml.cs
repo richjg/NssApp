@@ -20,7 +20,7 @@ namespace NssApp
             if (isValid)
             {
                 App.IsUserLoggedIn = true;
-                Navigation.InsertPageBefore(new DashBoard(), this);
+                Navigation.InsertPageBefore(new Master(), this);
                 await Navigation.PopAsync();
             }
             else
