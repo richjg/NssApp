@@ -45,12 +45,12 @@ namespace NssApp.RestApi
             return false;
         }
 
-        public async Task<List<Machine>> GetComputers(int page, int numberOfMachines)
+        public async Task<List<Machine>> GetComputers(int page, int numberOfMachines, string searchText)
         {
             var machines = new List<Machine>();
             
             var skip = numberOfMachines * (page - 1);
-            var result = await HttpClient.GetAsync($"v6/machines?$top={numberOfMachines}&$skip={skip}");
+            var result = await HttpClient.GetAsync($"v6/machines?$filter=contains(DisplayName, '{searchText}')&$top={numberOfMachines}&$skip={skip}");
             if (result.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var jsonText = await result.Content.ReadAsStringAsync();

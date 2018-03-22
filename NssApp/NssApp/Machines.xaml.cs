@@ -16,6 +16,7 @@ namespace NssApp
         public ObservableCollection<Machine> MachineCollection { get; set; } = new ObservableCollection<Machine>();
         public int CurrentPage { get; private set; } = 1;
         public bool HasMoreItems { get; set; } = true;
+        public string SearchText { get; set; } = string.Empty;
 
         public Machines()
         {
@@ -28,7 +29,7 @@ namespace NssApp
             {
                 machineList.ItemAppearing += MachineListOnItemAppearing;
                 machineList.ItemsSource = MachineCollection;
-                await LoadMachines(CurrentPage);
+                await LoadMachines(CurrentPage, SearchText);
             }
             catch (Exception e)
             {
@@ -42,17 +43,30 @@ namespace NssApp
         {
             if (sender is ListView listView && listView.ItemsSource is IList<Machine> items && itemVisibilityEventArgs.Item == items[items.Count - 1])
             {
-                CurrentPage++;
-                await LoadMachines(CurrentPage);
+                if (HasMoreItems)
+                {
+                    CurrentPage++;
+                    await LoadMachines(CurrentPage, SearchText);
+                }
             }
         }
 
-        private async Task LoadMachines(int page)
+        private async void Entry_OnTextChanged(object sender, TextChangedEventArgs e)
         {
-            if (HasMoreItems == false)
-                return;
+            await LoadMachines(CurrentPage, e.NewTextValue);
+        }
 
-            var machines = await App.NssRestApi.GetComputers(page, 20);
+        private async Task LoadMachines(int page, string searchText)
+        {
+            if (SearchText != searchText)
+            {
+                SearchText = searchText;
+                CurrentPage = 1;
+                MachineCollection.Clear();
+                HasMoreItems = true;
+            }
+            
+            var machines = await App.NssRestApi.GetComputers(page, 20, searchText);
             HasMoreItems = machines.Count == 20;
 
             foreach (var machine in machines)
