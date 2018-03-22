@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 using NssApp.RestApi;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -27,7 +28,7 @@ namespace NssApp
             {
                 machineList.ItemAppearing += MachineListOnItemAppearing;
                 machineList.ItemsSource = MachineCollection;
-                LoadMachines(CurrentPage);
+                await LoadMachines(CurrentPage);
             }
             catch (Exception e)
             {
@@ -42,11 +43,11 @@ namespace NssApp
             if (sender is ListView listView && listView.ItemsSource is IList<Machine> items && itemVisibilityEventArgs.Item == items[items.Count - 1])
             {
                 CurrentPage++;
-                LoadMachines(CurrentPage);
+                await LoadMachines(CurrentPage);
             }
         }
 
-        private async void LoadMachines(int page)
+        private async Task LoadMachines(int page)
         {
             if (HasMoreItems == false)
                 return;
