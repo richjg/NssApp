@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using NssApp.RestApi;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -9,6 +12,10 @@ namespace NssApp
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Machines : ContentPage
     {
+        public ObservableCollection<Machine> MachineCollection { get; set; } = new ObservableCollection<Machine>();
+        public int CurrentPage { get; private set; } = 1;
+        public bool HasMoreItems { get; set; } = true;
+
         public Machines()
         {
             InitializeComponent();
@@ -18,7 +25,9 @@ namespace NssApp
         {
             try
             {
-                machineList.ItemsSource = await App.NssRestApi.GetComputers();
+                machineList.ItemAppearing += MachineListOnItemAppearing;
+                machineList.ItemsSource = MachineCollection;
+                LoadMachines(CurrentPage);
             }
             catch (Exception e)
             {
@@ -26,6 +35,29 @@ namespace NssApp
             }
 
             base.OnAppearing();
+        }
+
+        protected async void MachineListOnItemAppearing(object sender, ItemVisibilityEventArgs itemVisibilityEventArgs)
+        {
+            if (sender is ListView listView && listView.ItemsSource is IList<Machine> items && itemVisibilityEventArgs.Item == items[items.Count - 1])
+            {
+                CurrentPage++;
+                LoadMachines(CurrentPage);
+            }
+        }
+
+        private async void LoadMachines(int page)
+        {
+            if (HasMoreItems == false)
+                return;
+
+            var machines = await App.NssRestApi.GetComputers(page, 20);
+            HasMoreItems = machines.Count == 20;
+
+            foreach (var machine in machines)
+            {
+                MachineCollection.Add(machine);
+            }
         }
     }
 }
