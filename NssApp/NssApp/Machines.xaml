@@ -3,13 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NssApp.Machines">
     <ContentPage.Content>
-        <StackLayout Orientation="Vertical" Padding="20">
+        <StackLayout Orientation="Vertical">
             <Entry Placeholder="Search" TextChanged="Entry_OnTextChanged"></Entry>
-            <ListView x:Name="machineList" ItemSelected="MachineList_OnItemSelected">
+            <ListView x:Name="machineList" ItemSelected="MachineList_OnItemSelected" RowHeight="60">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
-                            <StackLayout Orientation="Horizontal" HeightRequest="60">
+                            <StackLayout Orientation="Horizontal" Padding="10">
                                 <Label Text="&#xF108;" TextColor="{Binding BackgroundColor}" FontSize="35" VerticalTextAlignment="Center">
                                     <Label.FontFamily>
                                         <OnPlatform x:TypeArguments="x:String">
