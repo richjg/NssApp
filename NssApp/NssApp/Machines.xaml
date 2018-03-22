@@ -5,7 +5,7 @@
     <ContentPage.Content>
         <StackLayout Orientation="Vertical" Padding="20">
             <Entry Placeholder="Search" TextChanged="Entry_OnTextChanged"></Entry>
-            <ListView x:Name="machineList">
+            <ListView x:Name="machineList" ItemSelected="MachineList_OnItemSelected">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

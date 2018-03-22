@@ -74,5 +74,13 @@ namespace NssApp
                 MachineCollection.Add(machine);
             }
         }
+        
+        private void MachineList_OnItemSelected(object sender, SelectedItemChangedEventArgs e)
+        {
+            if (e.SelectedItem is Machine machine)
+            {
+                Navigation.PushAsync(new MachineDetails(machine.Id));
+            }
+        }
     }
 }
