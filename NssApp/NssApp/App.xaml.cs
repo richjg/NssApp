@@ -22,7 +22,7 @@ namespace NssApp
                 NssRestClient.SetupClient(creds.BaseUrl, creds.Username, creds.Password);
             }
 
-            MainPage = new NavigationPage(new Master());
+            MainPage = new Master();
         }
 
 		protected override void OnStart ()

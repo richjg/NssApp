@@ -39,14 +39,8 @@ namespace NssApp
 
         public async void OnCancelButtonClicked(object sender, EventArgs e)
         {
-            if (Navigation.NavigationStack.Count > 1)
-            {
-                await Navigation.PopAsync();
-            }
-            else
-            {
-                await Navigation.PushAsync(new DashBoard());
-            }
+            Navigation.InsertPageBefore(new DashBoard(), this);
+            await Navigation.PopAsync();
         }
 
         public async void OnDoneButtonClicked(object sender, EventArgs e)
@@ -59,14 +53,8 @@ namespace NssApp
             else
             {
                 UserCredentialStore.Instance.SetCredentials(UrlEntry.Text, UsernameEntry.Text, PasswordEntry.Text);
-                if (Navigation.NavigationStack.Count > 1)
-                {
-                    await Navigation.PopAsync();
-                }
-                else
-                {
-                    await Navigation.PushAsync(new DashBoard());
-                }
+                Navigation.InsertPageBefore(new DashBoard(), this);
+                await Navigation.PopAsync();
             }
         }
     }
