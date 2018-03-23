@@ -66,12 +66,19 @@ namespace NssApp
                 HasMoreItems = true;
             }
 
-            var machines2 = await NssRestClient.Instance.GetComputers(page, 20, searchText).Match(valid: r => r, errors: (e) => Task.CompletedTask, loginRequired: () => Task.CompletedTask /* App.GetShowCredIssue(this) */ );
-            HasMoreItems = machines2.Count == 20;
-
-            foreach (var machine in machines2)
+            var machines = await NssRestClient.Instance.GetComputers(page, 20, searchText).Match(valid: r => r, errors: (e) => Task.CompletedTask, loginRequired: () =>
             {
-                MachineCollection.Add(machine);
+                return this.DisplayAlert("", "Hmm looks like your credentails are'nt quite right. Goto setting to take a look", "ok");
+            });
+
+            if (machines != null)
+            {
+                HasMoreItems = machines.Count == 20;
+
+                foreach (var machine in machines)
+                {
+                    MachineCollection.Add(machine);
+                }
             }
         }
         

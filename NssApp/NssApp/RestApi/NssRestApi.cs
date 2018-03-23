@@ -100,6 +100,7 @@ namespace NssApp.RestApi
             if (restResult.LoginRequired)
             {
                 loginRequired();
+                return default(TResult);
             }
 
             errors(restResult.RestResultError);
@@ -116,30 +117,16 @@ namespace NssApp.RestApi
             {
                 return valid(restResult.Result);
             }
-            if (restResult.LoginRequired)
+            else if (restResult.LoginRequired)
             {
                 await loginRequired();
+                return default(TResult);
             }
-
-            await errors(restResult.RestResultError);
-
-            return default(TResult);
-        }
-
-        public async static Task<TResult> Match<T, TResult>(this RestResult<T> restResult, Func<T, TResult> valid, Func<RestResultError,Task> errors, Func<Task> loginRequired)
-        {
-            if (restResult.HasResult)
+            else
             {
-                return valid(restResult.Result);
+                await errors(restResult.RestResultError);
+                return default(TResult);
             }
-            if (restResult.LoginRequired)
-            {
-                await loginRequired();
-            }
-
-            await errors(restResult.RestResultError);
-
-            return default(TResult);
         }
     }
 
@@ -237,6 +224,8 @@ namespace NssApp.RestApi
 
         private async Task<HttpResponseMessage> SendWithAutoLoginRetryAsync(Func<HttpRequestMessage> getRequest)
         {
+            await Task.Yield();
+
             if(AuthenticationFailed || httpClient == null)
             {
                 //Dont want to lock them out.
