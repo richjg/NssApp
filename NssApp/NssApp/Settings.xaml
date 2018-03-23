@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NssApp.Settings">
+    <ContentPage.Content>
+        <StackLayout Padding="50">
+            <Button Text="Cancel" Clicked="OnCancelButtonClicked" />
+            <Button Text="Done" Clicked="OnDoneButtonClicked" />
+            <Entry x:Name="UrlEntry" Placeholder="Url" />
+            <Entry x:Name="UsernameEntry" Placeholder="Username" />
+            <Entry x:Name="PasswordEntry" Placeholder="Password" IsPassword="true" />
+            <Label x:Name="MessageLabel" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

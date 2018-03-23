@@ -8,7 +8,7 @@ namespace System.Net.Http
 {
     public static class HttpContentExtensions
     {
-        public static async Task<T> FromJson<T>(this HttpContent httpContent)
+        public static async Task<T> FromJsonAsync<T>(this HttpContent httpContent)
         {
             var stringContent = await httpContent.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(stringContent);

@@ -10,6 +10,7 @@
                 <x:Array Type="{x:Type local:MasterPageItem}">
                     <local:MasterPageItem Title="Dashboard" TargetType="{x:Type local:DashBoard}" />
                     <local:MasterPageItem Title="Machines" TargetType="{x:Type local:Machines}" />
+                    <local:MasterPageItem Title="Settings" TargetType="{x:Type local:Settings}" />
                 </x:Array>
             </ListView.ItemsSource>
             <ListView.Header>

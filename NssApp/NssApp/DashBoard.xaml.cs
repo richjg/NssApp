@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NssApp.RestApi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xamarin.Forms;
@@ -18,7 +19,7 @@ namespace NssApp
         {
             try
             {
-                var trafficLightCounts = await App.NssRestApi.GetTrafficLightCounts();
+                var trafficLightCounts = await NssRestClient.Instance.GetTrafficLightCounts().Match(valid:t => t, errors: e => { }, loginRequired: () => { });
 
                 RedCount.Text = trafficLightCounts.RedCount;
                 AmberCount.Text = trafficLightCounts.AmberCount;

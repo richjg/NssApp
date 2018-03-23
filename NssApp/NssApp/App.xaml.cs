@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NssApp.RestApi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,21 +10,19 @@ namespace NssApp
 {
 	public partial class App : Application
 	{
-        public static bool IsUserLoggedIn { get; set; }
-        public static RestApi.NssRestApi NssRestApi = new RestApi.NssRestApi();
 
         public App ()
 		{
 			InitializeComponent();
 
-            if (!IsUserLoggedIn)
+            var creds = UserCredentialStore.Instance.GetCredentials();
+
+            if (creds != null)
             {
-                MainPage = new NavigationPage(new LoginPage());
+                NssRestClient.SetupClient(creds.BaseUrl, creds.Username, creds.Password);
             }
-            else
-            {
-                MainPage = new NavigationPage(new Master());
-            }
+
+            MainPage = new NavigationPage(new Master());
         }
 
 		protected override void OnStart ()

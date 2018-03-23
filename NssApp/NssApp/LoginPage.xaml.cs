@@ -14,20 +14,20 @@ namespace NssApp
             InitializeComponent();
         }
 
-        async void OnLoginButtonClicked(object sender, EventArgs e)
+        void OnLoginButtonClicked(object sender, EventArgs e)
         {
-            var isValid = await App.NssRestApi.Login(UsernameEntry.Text, PasswordEntry.Text);
-            if (isValid)
-            {
-                App.IsUserLoggedIn = true;
-                Navigation.InsertPageBefore(new Master(), this);
-                await Navigation.PopAsync();
-            }
-            else
-            {
-                MessageLabel.Text = "Login failed";
-                PasswordEntry.Text = string.Empty;
-            }
+            //var isValid = await App.NssRestApi.Login(UsernameEntry.Text, PasswordEntry.Text);
+            //if (isValid)
+            //{
+            //    App.IsUserLoggedIn = true;
+            //    Navigation.InsertPageBefore(new Master(), this);
+            //    await Navigation.PopAsync();
+            //}
+            //else
+            //{
+            //    MessageLabel.Text = "Login failed";
+            //    PasswordEntry.Text = string.Empty;
+            //}
         }
     }
 }
