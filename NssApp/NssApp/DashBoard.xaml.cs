@@ -19,11 +19,13 @@ namespace NssApp
         {
             try
             {
-                var trafficLightCounts = await NssRestClient.Instance.GetTrafficLightCounts().Match(valid:t => t, errors: e => { }, loginRequired: () => { });
-
-                RedCount.Text = trafficLightCounts.RedCount;
-                AmberCount.Text = trafficLightCounts.AmberCount;
-                GreenCount.Text = trafficLightCounts.GreenCount;
+                var trafficLightCounts = await NssRestClient.Instance.GetTrafficLightCounts().ResolveData(this);
+                if (trafficLightCounts != null)
+                {
+                    RedCount.Text = trafficLightCounts.RedCount;
+                    AmberCount.Text = trafficLightCounts.AmberCount;
+                    GreenCount.Text = trafficLightCounts.GreenCount;
+                }
             }
             catch (Exception e)
             {

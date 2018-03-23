@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Xamarin.Auth;
+using Xamarin.Forms;
 
 namespace NssApp.RestApi
 {
@@ -128,6 +129,8 @@ namespace NssApp.RestApi
                 return default(TResult);
             }
         }
+
+        public static Task<T> ResolveData<T>(this Task<RestResult<T>> restResultTask, Page page) => restResultTask.Match(valid: r => r, errors: (e) => Task.CompletedTask, loginRequired: App.GetLoginFailedMethod(page));
     }
 
     public class NssRestClient
@@ -162,9 +165,22 @@ namespace NssApp.RestApi
             }
         }
 
+        public Task<RestResult<List<Machine>>> GetComputers(int page, int numberOfMachines, string searchText)
+        {
+            return SendGet<List<Machine>>($"v6/machines?$filter=contains(DisplayName, '{searchText}')&$top={numberOfMachines}&$skip={numberOfMachines * (page - 1)}");
+        }
+
+        public Task<RestResult<TrafficLightCounts>> GetTrafficLightCounts()
+        {
+            return SendGet<TrafficLightCounts>($"v6/trafficlights/self");
+        }
+
+
+        //Sausage factory below
+
         public async Task<bool> Login()
         {
-            if(httpClient == null)
+            if (httpClient == null)
             {
                 return false;
             }
@@ -175,7 +191,7 @@ namespace NssApp.RestApi
                     new KeyValuePair<string, string>("grant_type", "password"),
                     new KeyValuePair<string, string>("username", settings.Username),
                     new KeyValuePair<string, string>("password", settings.Password)
-            })); 
+            }));
 
             if (result.StatusCode == System.Net.HttpStatusCode.OK)
             {
@@ -186,16 +202,6 @@ namespace NssApp.RestApi
             }
 
             return false;
-        }
-
-        public Task<RestResult<List<Machine>>> GetComputers(int page, int numberOfMachines, string searchText)
-        {
-            return SendGet<List<Machine>>($"v6/machines?$filter=contains(DisplayName, '{searchText}')&$top={numberOfMachines}&$skip={numberOfMachines * (page - 1)}");
-        }
-
-        public Task<RestResult<TrafficLightCounts>> GetTrafficLightCounts()
-        {
-            return SendGet<TrafficLightCounts>($"v6/trafficlights/self");
         }
 
         private Task<HttpResponseMessage> SendGet(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, url));

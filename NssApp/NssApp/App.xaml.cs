@@ -40,9 +40,9 @@ namespace NssApp
 			// Handle when your app resumes
 		}
 
-        public static Func<Task> GetShowCredIssue(Page p)
+        public static Func<Task> GetLoginFailedMethod(Page p)
         {
-            return () => p.DisplayAlert("", "Hmm looks like your credentails are'nt quite right. Goto setting to take a look", "ok");
+            return () => p.DisplayAlert("Connecting", "Hmm having trouble connecting to the server. Goto setting's to take a look", "Ok");
         }
 	}
 }

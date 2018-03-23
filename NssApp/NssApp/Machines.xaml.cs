@@ -66,10 +66,7 @@ namespace NssApp
                 HasMoreItems = true;
             }
 
-            var machines = await NssRestClient.Instance.GetComputers(page, 20, searchText).Match(valid: r => r, errors: (e) => Task.CompletedTask, loginRequired: () =>
-            {
-                return this.DisplayAlert("", "Hmm looks like your credentails are'nt quite right. Goto setting to take a look", "ok");
-            });
+            var machines = await NssRestClient.Instance.GetComputers(page, 20, searchText).ResolveData(this);
 
             if (machines != null)
             {
