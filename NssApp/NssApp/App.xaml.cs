@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace NssApp
@@ -39,5 +39,10 @@ namespace NssApp
 		{
 			// Handle when your app resumes
 		}
+
+        public static Func<Task> GetShowCredIssue(Page p)
+        {
+            return () => p.DisplayAlert("", "Hmm looks like your credentails are'nt quite right. Goto setting to take a look", "ok");
+        }
 	}
 }

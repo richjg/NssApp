@@ -106,6 +106,41 @@ namespace NssApp.RestApi
 
             return default(TResult);
         }
+
+
+        public async static Task<TResult> Match<T, TResult>(this Task<RestResult<T>> restResultTask, Func<T, TResult> valid, Func<RestResultError, Task> errors, Func<Task> loginRequired)
+        {
+            var restResult = await restResultTask;
+
+            if (restResult.HasResult)
+            {
+                return valid(restResult.Result);
+            }
+            if (restResult.LoginRequired)
+            {
+                await loginRequired();
+            }
+
+            await errors(restResult.RestResultError);
+
+            return default(TResult);
+        }
+
+        public async static Task<TResult> Match<T, TResult>(this RestResult<T> restResult, Func<T, TResult> valid, Func<RestResultError,Task> errors, Func<Task> loginRequired)
+        {
+            if (restResult.HasResult)
+            {
+                return valid(restResult.Result);
+            }
+            if (restResult.LoginRequired)
+            {
+                await loginRequired();
+            }
+
+            await errors(restResult.RestResultError);
+
+            return default(TResult);
+        }
     }
 
     public class NssRestClient
@@ -176,10 +211,10 @@ namespace NssApp.RestApi
             return SendGet<TrafficLightCounts>($"v6/trafficlights/self");
         }
 
-        private Task<HttpResponseMessage> SendGet(string url) => SendWithAutoLoginRetryAsync(new HttpRequestMessage(HttpMethod.Get, url));
-        private Task<HttpResponseMessage> SendPost<T>(string url,T jsonPostObject) => SendWithAutoLoginRetryAsync(new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
-        private Task<HttpResponseMessage> SendPut<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(new HttpRequestMessage(HttpMethod.Put, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
-        private Task<HttpResponseMessage> SendDelete(string url) => SendWithAutoLoginRetryAsync(new HttpRequestMessage(HttpMethod.Delete, url));
+        private Task<HttpResponseMessage> SendGet(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, url));
+        private Task<HttpResponseMessage> SendPost<T>(string url,T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
+        private Task<HttpResponseMessage> SendPut<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Put, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
+        private Task<HttpResponseMessage> SendDelete(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Delete, url));
 
 
         private async Task<RestResult<T>> SendGet<T>(string url)
@@ -200,7 +235,7 @@ namespace NssApp.RestApi
             return new RestResultError { Messages = { new RestResultErrorMessage { Message = result.ReasonPhrase } } };
         }
 
-        private async Task<HttpResponseMessage> SendWithAutoLoginRetryAsync(HttpRequestMessage request)
+        private async Task<HttpResponseMessage> SendWithAutoLoginRetryAsync(Func<HttpRequestMessage> getRequest)
         {
             if(AuthenticationFailed || httpClient == null)
             {
@@ -208,12 +243,12 @@ namespace NssApp.RestApi
                 return new HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
             }
 
-            var response = await httpClient.SendAsync(request);
+            var response = await httpClient.SendAsync(getRequest());
             if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
                 if(await this.Login())
                 {
-                    response = await httpClient.SendAsync(request);
+                   response = await httpClient.SendAsync(getRequest());
                 }
                 else
                 {

@@ -65,9 +65,8 @@ namespace NssApp
                 MachineCollection.Clear();
                 HasMoreItems = true;
             }
-            //Application.Current.SavePropertiesAsync
 
-            var machines2 = await NssRestClient.Instance.GetComputers(page, 20, searchText).Match(valid: r => r, errors: (e) => { }, loginRequired: () => { });
+            var machines2 = await NssRestClient.Instance.GetComputers(page, 20, searchText).Match(valid: r => r, errors: (e) => Task.CompletedTask, loginRequired: () => Task.CompletedTask /* App.GetShowCredIssue(this) */ );
             HasMoreItems = machines2.Count == 20;
 
             foreach (var machine in machines2)
