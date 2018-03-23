@@ -21,7 +21,7 @@ namespace NssApp.RestApi
 
     public class UserCredentialStore
     {
-        private const string ServiceId = "FO.NSS.APP.V2";
+        private const string ServiceId = "FO.NSS.APP.V3";
 
         private UserCredentialStore()
         {
@@ -52,11 +52,14 @@ namespace NssApp.RestApi
             var accountStore = AccountStore.Create();
 
             var account = (accountStore.FindAccountsForService(ServiceId)).FirstOrDefault();
-            if (account == null)
+            if (account != null)
             {
-                account = new Account();
+                accountStore.Delete(account, ServiceId);
             }
-            account.Username = username;
+            account = new Account
+            {
+                Username = username
+            };
             account.Properties["password"] = password;
             account.Properties["baseurl"] = baseurl;
 
