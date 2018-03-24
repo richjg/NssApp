@@ -3,29 +3,33 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NssApp.DashBoard">
     <ContentPage.Content>
-        <Grid Padding="40">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="25*"></ColumnDefinition>
-                <ColumnDefinition Width="50*"></ColumnDefinition>
-                <ColumnDefinition Width="25*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-                <RowDefinition></RowDefinition>
-            </Grid.RowDefinitions>
-            <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="#ea683c" Padding="10">
-                <Label FontSize="15" Text="Attention" TextColor="White" />
-                <Label x:Name="RedCount" FontSize="80" TextColor="White" Margin="0,40,0,0"/>
-            </StackLayout>
-            <StackLayout Grid.Row="1" Grid.Column="1" BackgroundColor="#fcb53e" Padding="10">
-                <Label FontSize="15" Text="Unprotected" TextColor="White" />
-                <Label x:Name="AmberCount"  FontSize="80" TextColor="White" Margin="0,40,0,0" />
-            </StackLayout>
-            <StackLayout Grid.Row="2" Grid.Column="1" BackgroundColor="#bdcc2a" Padding="10">
-                <Label FontSize="15" Text="Protected" TextColor="White" />
-                <Label x:Name="GreenCount" FontSize="80" TextColor="White" Margin="0,40,0,0" />
-            </StackLayout>
-        </Grid>
+        <ListView IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding RefreshCommand}" x:Name="lv">
+            <ListView.Header>
+            <Grid Padding="40" x:Name="grid">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                    <ColumnDefinition Width="50*"></ColumnDefinition>
+                    <ColumnDefinition Width="25*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+                <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="#ea683c" Padding="10">
+                    <Label FontSize="15" Text="Attention" TextColor="White" />
+                    <Label x:Name="RedCount" FontSize="80" TextColor="White" Margin="0,40,0,0"/>
+                </StackLayout>
+                <StackLayout Grid.Row="1" Grid.Column="1" BackgroundColor="#fcb53e" Padding="10">
+                    <Label FontSize="15" Text="Unprotected" TextColor="White" />
+                    <Label x:Name="AmberCount"  FontSize="80" TextColor="White" Margin="0,40,0,0" />
+                </StackLayout>
+                <StackLayout Grid.Row="2" Grid.Column="1" BackgroundColor="#bdcc2a" Padding="10">
+                    <Label FontSize="15" Text="Protected" TextColor="White" />
+                    <Label x:Name="GreenCount" FontSize="80" TextColor="White" Margin="0,40,0,0" />
+                </StackLayout>
+            </Grid>
+            </ListView.Header>
+        </ListView>
     </ContentPage.Content>
 </ContentPage>
