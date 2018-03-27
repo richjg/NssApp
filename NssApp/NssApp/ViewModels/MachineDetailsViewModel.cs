@@ -45,7 +45,7 @@ namespace NssApp.ViewModels
         {
             this.MachineProtection = await this.nssRestApiService.GetMachineProtection(this.Machine.Id).ResolveData(this._CurrentPage);
 
-            //this.MachineProtection.ProtectedLevels[0].Policies[0].
+            //this.MachineProtection.ProtectedLevels[0].ProtectionLevel.Color.Policies[0].
         }
     }
 }

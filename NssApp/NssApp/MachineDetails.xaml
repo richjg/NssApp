@@ -23,7 +23,7 @@
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" Padding="10">
-                                <Label Text="&#xF108;" TextColor="{Binding Color}" FontSize="35" VerticalTextAlignment="Center">
+                                <Label Text="&#xF108;" TextColor="{Binding ProtectionLevel.Color}" FontSize="12" VerticalTextAlignment="Center">
                                     <Label.FontFamily>
                                         <OnPlatform x:TypeArguments="x:String">
                                             <On Platform="iOS" Value="FontAwesome" />
@@ -32,7 +32,7 @@
                                         </OnPlatform>
                                     </Label.FontFamily>
                                 </Label>
-                                <Label Text="{Binding Name}" FontSize="15" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                                <Label Text="{Binding ProtectionLevel.Description}" FontSize="15" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                             </StackLayout>
                         </ViewCell>
                     </DataTemplate>
