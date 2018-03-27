@@ -148,24 +148,26 @@ namespace NssApp.RestApi
         {
             if(httpClient == null)
             {
-                settings = new Settings { BaseUrl = baseurl, Username = username, Password = password };
                 httpClient = new HttpClient
                 {
                     BaseAddress = new Uri(baseurl)
                 };
             }
-            else
+
+            if(settings == null)
             {
-                if(settings.BaseUrl != baseurl)
-                {
-                    httpClient = new HttpClient
-                    {
-                        BaseAddress = new Uri(baseurl)
-                    };
-                }
-                settings.Username = username;
-                settings.Password = password;
+                settings = new Settings { BaseUrl = baseurl, Username = username, Password = password };
             }
+
+            if (settings.BaseUrl != baseurl)
+            {
+                httpClient = new HttpClient
+                {
+                    BaseAddress = new Uri(baseurl)
+                };
+            }
+            settings.Username = username;
+            settings.Password = password;
         }
 
         public Task<RestResult<List<Machine>>> GetComputers(int page, int numberOfMachines, string searchText)
