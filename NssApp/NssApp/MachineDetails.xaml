@@ -4,11 +4,17 @@
              x:Class="NssApp.MachineDetails"
              xmlns:mvvm="clr-namespace:NssApp.RestApi;assembly=NssApp">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Id" />
-            <Label Text="{Binding Machine.Id}" />
-            <Label Text="Display Name" />
-            <Label Text="{Binding Machine.DisplayName}" />
-        </StackLayout>
+        <Grid Margin="10" ColumnSpacing="10" RowSpacing="10" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Label Text="Id" Grid.Column="0" Grid.Row="0" />
+            <Label Text="{Binding Machine.Id}" Grid.Column="1" Grid.Row="0"/>
+            <Label Text="Display Name" Grid.Column="0" Grid.Row="1"/>
+            <Label Text="{Binding Machine.DisplayName}" Grid.Column="1" Grid.Row="1"/>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
