@@ -178,14 +178,13 @@ namespace NssApp.RestApi
             return SendGet<TrafficLightCounts>($"v6/trafficlights/self");
         }
 
-
         //Sausage factory below
 
-        public async Task<bool> Login()
+        public async Task<LoggedInUserInfo> Login()
         {
             if (httpClient == null)
             {
-                return false;
+                return null;
             }
 
             //Special case here, does not go through the Send methods
@@ -199,12 +198,30 @@ namespace NssApp.RestApi
             if (result.StatusCode == System.Net.HttpStatusCode.OK)
             {
                 var loginResponse = await result.Content.FromJsonAsync<LoginResponse>();
+
+
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResponse.AccessToken);
                 AuthenticationFailed = false;
-                return true;
+
+                ///v6/system/user
+                var userInfoReponse = await httpClient.GetAsync("v6/system/user");
+                var loggedInUserInfo = await userInfoReponse.Content.FromJsonAsync<ApiResult<LoggedInUserInfo>>();
+
+                return loggedInUserInfo.Data;
             }
 
-            return false;
+            return null;
+        }
+
+        public async Task<LoggedInUserInfo> GetCurrentUserInfo()
+        {
+            var result = await this.SendGet<LoggedInUserInfo>("v6/system/user");
+
+            if(result.HasResult)
+            {
+                return result.Result;
+            }
+            return null;
         }
 
         private Task<HttpResponseMessage> SendGet(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, url));
@@ -244,7 +261,7 @@ namespace NssApp.RestApi
             var response = await httpClient.SendAsync(getRequest());
             if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                if(await this.Login())
+                if((await this.Login()) != null)
                 {
                    response = await httpClient.SendAsync(getRequest());
                 }

@@ -46,12 +46,14 @@ namespace NssApp
         public async void OnDoneButtonClicked(object sender, EventArgs e)
         {
             NssRestClient.SetupClient(UrlEntry.Text, UsernameEntry.Text, PasswordEntry.Text);
-            if (await NssRestClient.Instance.Login() == false)
+            var loggedInUserInfo = await NssRestClient.Instance.Login();
+            if (loggedInUserInfo == null)
             {
                 MessageLabel.Text = "Login Failed, check your settings";
             }
             else
             {
+                App.LoggedInUserInfo = loggedInUserInfo;
                 UserCredentialStore.Instance.SetCredentials(UrlEntry.Text, UsernameEntry.Text, PasswordEntry.Text);
                 Navigation.InsertPageBefore(new DashBoard(), this);
                 await Navigation.PopAsync();
