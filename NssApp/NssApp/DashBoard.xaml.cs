@@ -17,7 +17,7 @@ namespace NssApp
         public DashBoard()
         {
             InitializeComponent();
-            this.BindingContext = new DashboardViewModel().Initialize(this);
+            this.BindingContext = new DashboardViewModel(new NssRestApiService(new UserCredentialStore(), new HttpClientFactory())).Initialize(this);
         }
     }
 }

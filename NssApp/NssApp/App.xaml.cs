@@ -15,14 +15,6 @@ namespace NssApp
         public App ()
 		{
 			InitializeComponent();
-
-            var creds = UserCredentialStore.Instance.GetCredentials();
-
-            if (creds != null)
-            {
-                NssRestClient.SetupClient(creds.BaseUrl, creds.Username, creds.Password);
-            }
-
             MainPage = new Master();
         }
 

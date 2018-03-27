@@ -1,4 +1,5 @@
 ﻿using NssApp.RestApi;
+using NssApp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,48 +17,7 @@ namespace NssApp
 		public Settings ()
 		{
 			InitializeComponent ();
+            this.BindingContext = new SettingsViewModel(new LoggedInUserService(new NssRestApiService(new UserCredentialStore(), new HttpClientFactory()), new UserCredentialStore())).Initialize(this);
 		}
-
-        protected override void OnAppearing()
-        {
-            var creds = UserCredentialStore.Instance.GetCredentials();
-            if(creds == null)
-            {
-                creds = new RestSettings
-                {
-                    BaseUrl = "https://uat.biomni.com/DevNetBackupNetBackupAdapterPanels/Api/",
-                    Password = "",
-                    Username = ""
-                };
-            }
-            UrlEntry.Text = creds.BaseUrl;
-            UsernameEntry.Text = creds.Username;
-            PasswordEntry.Text = creds.Password;
-
-            base.OnAppearing();
-        }
-
-        public async void OnCancelButtonClicked(object sender, EventArgs e)
-        {
-            Navigation.InsertPageBefore(new DashBoard(), this);
-            await Navigation.PopAsync();
-        }
-
-        public async void OnDoneButtonClicked(object sender, EventArgs e)
-        {
-            NssRestClient.SetupClient(UrlEntry.Text, UsernameEntry.Text, PasswordEntry.Text);
-            var loggedInUserInfo = await NssRestClient.Instance.Login();
-            if (loggedInUserInfo == null)
-            {
-                MessageLabel.Text = "Login Failed, check your settings";
-            }
-            else
-            {
-                App.LoggedInUserInfo = loggedInUserInfo;
-                UserCredentialStore.Instance.SetCredentials(UrlEntry.Text, UsernameEntry.Text, PasswordEntry.Text);
-                Navigation.InsertPageBefore(new DashBoard(), this);
-                await Navigation.PopAsync();
-            }
-        }
     }
 }

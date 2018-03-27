@@ -11,43 +11,67 @@ using Xamarin.Forms;
 
 namespace NssApp.RestApi
 {
-    public class RestSettings
-    {
-        public string BaseUrl { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-
-    }
-
     public class UserCredentialStore
     {
-        private const string ServiceId = "FO.NSS.APP.V3";
+        private const string ServiceId = "FO.NSS.APP.V4";
+        private static LoginSettings CurrentLoginSettings;
 
-        private UserCredentialStore()
+        public UserCredentialStore()
         {
         }
 
-        public static readonly UserCredentialStore Instance = new UserCredentialStore();
-
         public bool HasCredentials() => (AccountStore.Create().FindAccountsForService(ServiceId)).FirstOrDefault() != null;
 
-        public RestSettings GetCredentials()
+        public LoginSettings GetCredentials()
         {
+            if(CurrentLoginSettings != null)
+            {
+                return CurrentLoginSettings;
+            }
+
             var account = (AccountStore.Create().FindAccountsForService(ServiceId)).FirstOrDefault();
             if (account == null)
             {
                 return null;
             }
 
-            return new RestSettings
+            return CurrentLoginSettings = new LoginSettings
             {
                 BaseUrl = account.Properties["baseurl"],
                 Password = account.Properties["password"],
+                AccessToken = account.Properties["accesstoken"],
                 Username = account.Username
             };
         }
 
-        public void SetCredentials(string baseurl, string username, string password)
+        public void UpdateAccessToken(string accessToken)
+        {
+            var accountStore = AccountStore.Create();
+
+            var currentAccount = (accountStore.FindAccountsForService(ServiceId)).FirstOrDefault();
+            if (currentAccount == null)
+            {
+                return;
+            }
+            accountStore.Delete(currentAccount, ServiceId);
+
+            var newAccount = new Account
+            {
+                Username = currentAccount.Username
+            };
+            newAccount.Properties["password"] = currentAccount.Properties["password"];
+            newAccount.Properties["baseurl"] = currentAccount.Properties["baseurl"];
+            newAccount.Properties["accesstoken"] = accessToken;
+
+            if (CurrentLoginSettings != null)
+            {
+                CurrentLoginSettings.AccessToken = accessToken;
+            }
+
+            accountStore.Save(newAccount, ServiceId);
+        }
+
+        public void SetCredentials(LoginSettings loginSettings)
         {
             var accountStore = AccountStore.Create();
 
@@ -58,16 +82,24 @@ namespace NssApp.RestApi
             }
             account = new Account
             {
-                Username = username
+                Username = loginSettings.Username
             };
-            account.Properties["password"] = password;
-            account.Properties["baseurl"] = baseurl;
+            account.Properties["password"] = loginSettings.Password;
+            account.Properties["baseurl"] = loginSettings.BaseUrl;
+            account.Properties["accesstoken"] = loginSettings.AccessToken;
 
             accountStore.Save(account, ServiceId);
+
+            CurrentLoginSettings = loginSettings;
         }
     }
 
     public struct RestResultLoginRequired { }
+
+    public class RestResult
+    {
+        public RestResultError RestResultError { get; set; }
+    }
 
     public class RestResult<T>
     {
@@ -134,153 +166,5 @@ namespace NssApp.RestApi
         }
 
         public static Task<T> ResolveData<T>(this Task<RestResult<T>> restResultTask, Page page) => restResultTask.Match(valid: r => r, errors: (e) => Task.CompletedTask, loginRequired: App.GetLoginFailedMethod(page));
-    }
-
-    public class NssRestClient
-    {
-        private static HttpClient httpClient;
-        private static Settings settings;
-        private static bool AuthenticationFailed;
-
-        public static readonly NssRestClient Instance = new NssRestClient();
-
-        public static void SetupClient(string baseurl, string username, string password)
-        {
-            if(httpClient == null)
-            {
-                httpClient = new HttpClient
-                {
-                    BaseAddress = new Uri(baseurl)
-                };
-            }
-
-            if(settings == null)
-            {
-                settings = new Settings { BaseUrl = baseurl, Username = username, Password = password };
-            }
-
-            if (settings.BaseUrl != baseurl)
-            {
-                httpClient = new HttpClient
-                {
-                    BaseAddress = new Uri(baseurl)
-                };
-            }
-            settings.Username = username;
-            settings.Password = password;
-        }
-
-        public Task<RestResult<List<Machine>>> GetComputers(int page, int numberOfMachines, string searchText)
-        {
-            return SendGet<List<Machine>>($"v6/machines?$filter=contains(DisplayName, '{searchText}')&$top={numberOfMachines}&$skip={numberOfMachines * (page - 1)}");
-        }
-
-        public Task<RestResult<TrafficLightCounts>> GetTrafficLightCounts()
-        {
-            return SendGet<TrafficLightCounts>($"v6/trafficlights/self");
-        }
-
-        //Sausage factory below
-
-        public async Task<LoggedInUserInfo> Login()
-        {
-            if (httpClient == null)
-            {
-                return null;
-            }
-
-            //Special case here, does not go through the Send methods
-            var result = await httpClient.PostAsync("auth/token", new FormUrlEncodedContent(new[]
-            {
-                    new KeyValuePair<string, string>("grant_type", "password"),
-                    new KeyValuePair<string, string>("username", settings.Username),
-                    new KeyValuePair<string, string>("password", settings.Password)
-            }));
-
-            if (result.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                var loginResponse = await result.Content.FromJsonAsync<LoginResponse>();
-
-
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResponse.AccessToken);
-                AuthenticationFailed = false;
-
-                ///v6/system/user
-                var userInfoReponse = await httpClient.GetAsync("v6/system/user");
-                var loggedInUserInfo = await userInfoReponse.Content.FromJsonAsync<ApiResult<LoggedInUserInfo>>();
-
-                return loggedInUserInfo.Data;
-            }
-
-            return null;
-        }
-
-        public async Task<LoggedInUserInfo> GetCurrentUserInfo()
-        {
-            var result = await this.SendGet<LoggedInUserInfo>("v6/system/user");
-
-            if(result.HasResult)
-            {
-                return result.Result;
-            }
-            return null;
-        }
-
-        private Task<HttpResponseMessage> SendGet(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, url));
-        private Task<HttpResponseMessage> SendPost<T>(string url,T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
-        private Task<HttpResponseMessage> SendPut<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Put, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
-        private Task<HttpResponseMessage> SendDelete(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Delete, url));
-
-
-        private async Task<RestResult<T>> SendGet<T>(string url)
-        {
-            var result = await SendGet(url);
-
-            if (result.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                var apiResult = await result.Content.FromJsonAsync<ApiResult<T>>();
-                return apiResult.Data;
-            }
-
-            if (result.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                return new RestResultLoginRequired();
-            }
-
-            return new RestResultError { Messages = { new RestResultErrorMessage { Message = result.ReasonPhrase } } };
-        }
-
-        private async Task<HttpResponseMessage> SendWithAutoLoginRetryAsync(Func<HttpRequestMessage> getRequest)
-        {
-            await Task.Yield();
-
-            if(AuthenticationFailed || httpClient == null)
-            {
-                //Dont want to lock them out.
-                return new HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
-            }
-
-            var response = await httpClient.SendAsync(getRequest());
-            if(response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
-            {
-                if((await this.Login()) != null)
-                {
-                   response = await httpClient.SendAsync(getRequest());
-                }
-                else
-                {
-                    AuthenticationFailed = true;
-                }
-            }
-
-            return response;
-        }
-
-        private class Settings
-        {
-            public string BaseUrl { get; set; }
-            public string Username { get; set; }
-            public string Password { get; set; }
-        }
     }
 }

@@ -1,11 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behavior="clr-namespace:NssApp.Behaviors;assembly=NssApp"
              x:Class="NssApp.Machines">
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">
-            <Entry Placeholder="Search" TextChanged="Entry_OnTextChanged"></Entry>
-            <ListView x:Name="machineList" ItemSelected="MachineList_OnItemSelected" RowHeight="60">
+            <Entry Placeholder="Search" Text="{Binding SearchText, Mode=TwoWay}">
+                <!--<Entry.Behaviors>
+                    <b:Interaction.Behaviors>
+                        <b:BehaviorCollection>
+                            <b:EventToCommand EventName="TextChanged" Command="{Binding SearchTextChangedCommand}" />
+                        </b:BehaviorCollection>
+                    </b:Interaction.Behaviors>
+                </Entry.Behaviors>-->
+            </Entry>
+            <ListView x:Name="machineList" RowHeight="60" IsRefreshing="{Binding IsRefreshing}" ItemsSource="{Binding MachineCollection}" >
+                <ListView.Behaviors>
+                    <behavior:ListViewPagningBehavior Command="{Binding LoadMoreCommand}"></behavior:ListViewPagningBehavior>
+                </ListView.Behaviors>
+                <!--<b:Interaction.Behaviors>
+                    <b:BehaviorCollection>
+                        <b:EventToCommand EventName="ItemSelected" Command="{Binding MachineSelectedCommand}" />
+                    </b:BehaviorCollection>
+                </b:Interaction.Behaviors>-->
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>

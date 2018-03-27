@@ -35,7 +35,7 @@ namespace NssApp.RestApi
         public string CustomerCode { get; set; }
         public bool IsMsp { get; set; }
         public bool IsTenantAdmin { get; set; }
-        public int TenantId { get; set; }
+        public int? TenantId { get; set; }
         public string UserGuid { get; set; }
         public string UserId { get; set; }
         public string UserName { get; set; }

@@ -15,6 +15,11 @@ namespace NssApp.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         private Page _CurrentPage;
 
+        public DashboardViewModel(NssRestApiService nssRestApiService)
+        {
+            this.nssRestApiService = nssRestApiService;
+        }
+
         public DashboardViewModel Initialize(Page page)
         {
             this._CurrentPage = page;
@@ -40,6 +45,8 @@ namespace NssApp.ViewModels
         public string AmberCount { get => this._amberCount; set => SetPropertyValue(ref _amberCount, value, nameof(AmberCount)); }
 
         private string _greenCount;
+        private readonly NssRestApiService nssRestApiService;
+
         public string GreenCount { get => this._greenCount; set => SetPropertyValue(ref _greenCount, value, nameof(GreenCount)); }
 
         public ICommand PullToRefreshCommand
@@ -63,7 +70,7 @@ namespace NssApp.ViewModels
             this.IsRefreshing = true;
             try
             {
-                var trafficLightCounts = await NssRestClient.Instance.GetTrafficLightCounts().ResolveData(this._CurrentPage/*App.Current.MainPage*/);
+                var trafficLightCounts = await nssRestApiService.GetTrafficLightCounts().ResolveData(this._CurrentPage/*App.Current.MainPage*/);
                 if (trafficLightCounts != null)
                 {
                     RedCount = trafficLightCounts.RedCount;
