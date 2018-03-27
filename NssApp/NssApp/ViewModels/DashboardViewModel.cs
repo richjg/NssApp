@@ -10,78 +10,71 @@ using Xamarin.Forms;
 
 namespace NssApp.ViewModels
 {
-    //public class DashboardViewModel : INotifyPropertyChanged
-    //{
-    //    public ObservableCollection<CategoricalData> Data { get; set; }
+    public class DashboardViewModel : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private Page _CurrentPage;
 
-    //    private static ObservableCollection<CategoricalData> GetCategoricalData()
-    //    {
-    //        var data = new ObservableCollection<CategoricalData>  {
-    //        new CategoricalData { Category = "A", Value = 0.63 },
-    //        new CategoricalData { Category = "B", Value = 0.85 },
-    //        new CategoricalData { Category = "C", Value = 1.05 },
-    //        new CategoricalData { Category = "D", Value = 0.96 },
-    //        new CategoricalData { Category = "E", Value = 0.78 },
-    //    };
+        public DashboardViewModel Initialize(Page page)
+        {
+            this._CurrentPage = page;
+            page.Appearing += this.PageOnAppearing;
+            return this;
+        }
 
-    //        return data;
-    //    }
+        private void OnPropertyChanged(string name) => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-    //    private bool _isRefreshing = false;
+        private void SetPropertyValue<T>(ref T t, T value, string name)
+        {
+            t = value;
+            OnPropertyChanged(name);
+        }
 
-    //    public event PropertyChangedEventHandler PropertyChanged;
+        private bool _isRefreshing = false;
+        public bool IsRefreshing { get => this._isRefreshing; set => this.SetPropertyValue(ref _isRefreshing, value, nameof(IsRefreshing)); }
 
-    //    private void OnPropertyChanged(string name) => this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+        private string _redCount;
+        public string RedCount { get => this._redCount; set => SetPropertyValue(ref _redCount, value, nameof(RedCount)); }
 
-    //    public bool IsRefreshing
-    //    {
-    //        get { return _isRefreshing; }
-    //        set
-    //        {
-    //            _isRefreshing = value;
-    //            OnPropertyChanged(nameof(IsRefreshing));
-    //        }
-    //    }
+        private string _amberCount;
+        public string AmberCount { get => this._amberCount; set => SetPropertyValue(ref _amberCount, value, nameof(AmberCount)); }
 
-    //    public ICommand RefreshCommand
-    //    {
-    //        get
-    //        {
-    //            return new Command(async () =>
-    //            {
-    //                await LoadCounts();
-    //            });
-    //        }
-    //    }
+        private string _greenCount;
+        public string GreenCount { get => this._greenCount; set => SetPropertyValue(ref _greenCount, value, nameof(GreenCount)); }
 
-    //    public string RedCount { }
+        public ICommand PullToRefreshCommand
+        {
+            get
+            {
+                return new Command(async () => 
+                {
+                    await LoadCounts();
+                });
+            }
+        }
 
+        private async void PageOnAppearing(object sender, EventArgs e)
+        {
+            await LoadCounts();
+        }
 
-    //    private async Task LoadCounts()
-    //    {
-    //        this.IsRefreshing = true;
-    //        try
-    //        {
-    //            var trafficLightCounts = await NssRestClient.Instance.GetTrafficLightCounts().ResolveData(App.Current.MainPage);
-    //            if (trafficLightCounts != null)
-    //            {
-    //                RedCount.Text = trafficLightCounts.RedCount;
-    //                AmberCount.Text = trafficLightCounts.AmberCount;
-    //                GreenCount.Text = trafficLightCounts.GreenCount;
-    //            }
-    //        }
-    //        finally
-    //        {
-    //            this.IsRefreshing = false;
-    //        }
-    //    }
-
-
-    //    public class CategoricalData
-    //    {
-    //        public object Category { get; set; }
-
-    //        public double Value { get; set; }
-    //    }
-    //}
+        private async Task LoadCounts()
+        {
+            this.IsRefreshing = true;
+            try
+            {
+                var trafficLightCounts = await NssRestClient.Instance.GetTrafficLightCounts().ResolveData(this._CurrentPage/*App.Current.MainPage*/);
+                if (trafficLightCounts != null)
+                {
+                    RedCount = trafficLightCounts.RedCount;
+                    AmberCount = trafficLightCounts.AmberCount;
+                    GreenCount = trafficLightCounts.GreenCount;
+                }
+            }
+            finally
+            {
+                this.IsRefreshing = false;
+            }
+        }
+    }
 }
