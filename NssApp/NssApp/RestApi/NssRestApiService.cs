@@ -105,6 +105,11 @@ namespace NssApp.RestApi
             return SendGet<TrafficLightCounts>($"v6/trafficlights/self");
         }
 
+        public Task<RestResult<MachineProtection>> GetMachineProtection(int machineId)
+        {
+            return SendGet<MachineProtection>($"v6/machines/{machineId}/protected");
+        }
+
         private Task<HttpResponseMessage> SendGet(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, url));
         private Task<HttpResponseMessage> SendPost<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
         private Task<HttpResponseMessage> SendPut<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Put, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });

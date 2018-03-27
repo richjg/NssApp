@@ -38,10 +38,14 @@ namespace NssApp.ViewModels
 
         private Machine _machine;
         public Machine Machine { get => this._machine; set => this.SetPropertyValue(ref _machine, value, nameof(Machine)); }
+        private MachineProtection _machineProtection;
+        public MachineProtection MachineProtection { get => this._machineProtection; set => this.SetPropertyValue(ref _machineProtection, value, nameof(MachineProtection)); }
 
-        private void PageOnAppearing(object sender, EventArgs e)
+        private async void PageOnAppearing(object sender, EventArgs e)
         {
+            this.MachineProtection = await this.nssRestApiService.GetMachineProtection(this.Machine.Id).ResolveData(this._CurrentPage);
 
+            //this.MachineProtection.ProtectedLevels[0].Policies[0].
         }
     }
 }
