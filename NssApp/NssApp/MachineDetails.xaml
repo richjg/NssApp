@@ -1,10 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="NssApp.MachineDetails">
+             x:Class="NssApp.MachineDetails"
+             xmlns:mvvm="clr-namespace:NssApp.RestApi;assembly=NssApp">
     <ContentPage.Content>
         <StackLayout>
-            <Label x:Name="MachineId" />
+            <Label Text="Id" />
+            <Label Text="{Binding Machine.Id}" />
+            <Label Text="Display Name" />
+            <Label Text="{Binding Machine.DisplayName}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NssApp.RestApi;
+using NssApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,11 +14,10 @@ namespace NssApp
 	[XamlCompilation(XamlCompilationOptions.Compile)]
 	public partial class MachineDetails : ContentPage
 	{
-		public MachineDetails(int id)
+		public MachineDetails(Machine machine)
 		{
 			InitializeComponent();
-
-		    MachineId.Text = id.ToString();
+            this.BindingContext = new MachineDetailsViewModel(new NssRestApiService(new UserCredentialStore(), new HttpClientFactory())).Initialize(this, machine);
 		}
 	}
 }

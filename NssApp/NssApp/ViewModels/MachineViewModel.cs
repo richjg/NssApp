@@ -76,7 +76,7 @@ namespace NssApp.ViewModels
 
         private async Task MachineSelected(Machine machine)
         {
-            await this._Navigation.PushAsync(new MachineDetails(machine.Id));
+            await this._Navigation.PushAsync(new MachineDetails(machine));
         }
 
         private SemaphoreSlim semaphore = new SemaphoreSlim(1);
