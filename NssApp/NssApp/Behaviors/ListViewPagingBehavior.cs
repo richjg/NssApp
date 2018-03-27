@@ -6,13 +6,13 @@ using Xamarin.Forms;
 
 namespace NssApp.Behaviors
 {
-    public class ListViewPagningBehavior : Behavior<ListView>
+    public class ListViewPagingBehavior : Behavior<ListView>
     {
         public static readonly BindableProperty CommandProperty =
-            BindableProperty.Create("Command", typeof(ICommand), typeof(ListViewPagningBehavior), null);
+            BindableProperty.Create("Command", typeof(ICommand), typeof(ListViewPagingBehavior), null);
 
         public static readonly BindableProperty InputConverterProperty =
-            BindableProperty.Create("Converter", typeof(IValueConverter), typeof(ListViewPagningBehavior), null);
+            BindableProperty.Create("Converter", typeof(IValueConverter), typeof(ListViewPagingBehavior), null);
 
         public ListView AssociatedObject { get; private set; }
 
