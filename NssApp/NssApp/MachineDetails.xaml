@@ -5,39 +5,61 @@
              xmlns:mvvm="clr-namespace:NssApp.RestApi;assembly=NssApp">
     <ContentPage.Content>
         <StackLayout>
-            <Grid Margin="10" ColumnSpacing="10" RowSpacing="10" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Label Text="Id" Grid.Column="0" Grid.Row="0" />
-                <Label Text="{Binding Machine.Id}" Grid.Column="1" Grid.Row="0"/>
-                <Label Text="Display Name" Grid.Column="0" Grid.Row="1"/>
-                <Label Text="{Binding Machine.DisplayName}" Grid.Column="1" Grid.Row="1"/>
-            </Grid>
-            <Label Text="Protection"></Label>
-            <ListView ItemsSource="{Binding MachineProtection.ProtectedLevels}">
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <ViewCell>
-                            <StackLayout Orientation="Horizontal" Padding="10">
-                                <Label Text="&#xF108;" TextColor="{Binding ProtectionLevel.Color}" FontSize="12" VerticalTextAlignment="Center">
-                                    <Label.FontFamily>
-                                        <OnPlatform x:TypeArguments="x:String">
-                                            <On Platform="iOS" Value="FontAwesome" />
-                                            <On Platform="Android" Value="FontAwesome.otf#FontAwesome" />
-                                            <On Platform="UWP, WinRT, WinPhone" Value="Assets/Fonts/FontAwesome.otf#FontAwesome" />
-                                        </OnPlatform>
-                                    </Label.FontFamily>
-                                </Label>
-                                <Label Text="{Binding ProtectionLevel.Description}" FontSize="15" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                            </StackLayout>
-                        </ViewCell>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-            </ListView>
+            <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
+                <!-- Top controls -->
+                <Grid Margin="10" ColumnSpacing="10" RowSpacing="10" HorizontalOptions="FillAndExpand" VerticalOptions="Start">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Label Text="Id" Grid.Column="0" Grid.Row="0" />
+                    <Label Text="{Binding Machine.Id}" Grid.Column="1" Grid.Row="0"/>
+                    <Label Text="Display Name" Grid.Column="0" Grid.Row="1"/>
+                    <Label Text="{Binding Machine.DisplayName}" Grid.Column="1" Grid.Row="1"/>
+                </Grid>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
+                <Label Text="Protection" HorizontalOptions="Fill" ></Label>
+                <ListView ItemsSource="{Binding MachineProtection.ProtectedLevels}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <StackLayout Orientation="Horizontal" Padding="10">
+                                    <Label Text="&#xF108;" TextColor="{Binding ProtectionLevel.Color}" FontSize="12" VerticalTextAlignment="Center">
+                                        <Label.FontFamily>
+                                            <OnPlatform x:TypeArguments="x:String">
+                                                <On Platform="iOS" Value="FontAwesome" />
+                                                <On Platform="Android" Value="FontAwesome.otf#FontAwesome" />
+                                                <On Platform="UWP, WinRT, WinPhone" Value="Assets/Fonts/FontAwesome.otf#FontAwesome" />
+                                            </OnPlatform>
+                                        </Label.FontFamily>
+                                    </Label>
+                                    <Label Text="{Binding ProtectionLevel.Description}" FontSize="15" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                                </StackLayout>
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="15">
+                <!-- bottom controls -->
+                <Label Text="&#xF013;" FontSize="18" VerticalTextAlignment="Center">
+                    <Label.FontFamily>
+                        <OnPlatform x:TypeArguments="x:String">
+                            <On Platform="iOS" Value="FontAwesome" />
+                            <On Platform="Android" Value="FontAwesome.otf#FontAwesome" />
+                            <On Platform="UWP, WinRT, WinPhone" Value="Assets/Fonts/FontAwesome.otf#FontAwesome" />
+                        </OnPlatform>
+                    </Label.FontFamily>
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ShowProtectionOptionsCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

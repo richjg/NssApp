@@ -110,6 +110,11 @@ namespace NssApp.RestApi
             return SendGet<MachineProtection>($"v6/machines/{machineId}/protected");
         }
 
+        public Task<RestResult<List<ApiProtectionLevel>>> GetAvailableMachineProtectionLevels(int machineId)
+        {
+            return SendGet<List<ApiProtectionLevel>> ($"v6/machines/{machineId}/protection/levels");
+        }
+
         private Task<HttpResponseMessage> SendGet(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, url));
         private Task<HttpResponseMessage> SendPost<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
         private Task<HttpResponseMessage> SendPut<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Put, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
