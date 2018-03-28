@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -44,18 +45,29 @@ namespace NssApp.ViewModels
         private MachineProtection _machineProtection;
         public MachineProtection MachineProtection { get => this._machineProtection; set => this.SetPropertyValue(ref _machineProtection, value, nameof(MachineProtection)); }
 
+        private List<ApiProtectionLevel> _availableProtectionLevels;
+        public List<ApiProtectionLevel> AvailableProtectionLevels { get => this._availableProtectionLevels; set => this.SetPropertyValue(ref _availableProtectionLevels, value, nameof(AvailableProtectionLevels)); }
+
+
+
         public ICommand ShowProtectionOptionsCommand { get => new Command(async () => await ShowProtectionOptions()); }
 
         private async void PageOnAppearing(object sender, EventArgs e)
         {
             this.MachineProtection = await this.nssRestApiService.GetMachineProtection(this.Machine.Id).ResolveData(this._CurrentPage);
+            this.AvailableProtectionLevels = await this.nssRestApiService.GetAvailableMachineProtectionLevels(this.Machine.Id).ResolveData(this._CurrentPage);
 
             //this.MachineProtection.ProtectedLevels[0].ProtectionLevel.Color.Policies[0].
         }
 
         private async Task ShowProtectionOptions()
         {
-            var selected = await this._CurrentPage.DisplayActionSheet("Protect", "Close", null, new[] { "Gold", "Silver", "Bronze" });
+//            var selected = await this._CurrentPage.DisplayActionSheet("Protect", "Close", null, new[] { "Gold", "Silver", "Bronze" });
+            if(this.AvailableProtectionLevels != null)
+            {
+                var levelNames= this.AvailableProtectionLevels.Select(p => p.Name).ToArray();
+                var selected = await this._CurrentPage.DisplayActionSheet("Protect", "Close", null, levelNames);
+            }
         }
     }
 }
