@@ -4,9 +4,9 @@
              x:Class="NssApp.MachineDetails"
              xmlns:mvvm="clr-namespace:NssApp.RestApi;assembly=NssApp">
     <ContentPage.Content>
-        <StackLayout>
+        <StackLayout Padding="10">
             <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
-                <Label Text="{Binding Machine.DisplayName}" />
+                <Label FontSize="20" Text="{Binding Machine.DisplayName}" />
             </StackLayout>
             <StackLayout>
                 <Grid>
@@ -15,17 +15,20 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
                     <StackLayout Grid.Row="0" Grid.Column="0" BackgroundColor="#76b0bd" Padding="10">
-                        <Label FontSize="20" TextColor="White" Text="Consumed Capacity" />
-                        <Label FontSize="12" TextColor="White" Text="0" />
+                        <Label FontSize="20" TextColor="White" Text="Consumed Capacity" HeightRequest="50" />
+                        <Label FontSize="12" TextColor="White" Text="0" HeightRequest="50" VerticalTextAlignment="Start" />
                     </StackLayout>
                     <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="{Binding ProtectionStatus.Color}" Padding="10">
-                        <Label FontSize="20" TextColor="White" Text="{Binding ProtectionStatus.Title}" />
-                        <Label FontSize="12" TextColor="White" Text="{Binding ProtectionStatus.Text}" />
+                        <Label FontSize="20" TextColor="White" Text="{Binding ProtectionStatus.Title}" HeightRequest="50" />
+                        <Label FontSize="12" TextColor="White" Text="{Binding ProtectionStatus.Text}" HeightRequest="50" VerticalTextAlignment="Start" />
                     </StackLayout>
                     <StackLayout Grid.Row="0" Grid.Column="2" BackgroundColor="{Binding LastSuccessfulBackupStatus.Color}" Padding="10">
-                        <Label FontSize="20" TextColor="White" Text="{Binding LastSuccessfulBackupStatus.Title}" />
-                        <Label FontSize="12" TextColor="White" Text="{Binding LastSuccessfulBackupStatus.Text}" />
+                        <Label FontSize="20" TextColor="White" Text="{Binding LastSuccessfulBackupStatus.Title}" HeightRequest="50" />
+                        <Label FontSize="12" TextColor="White" Text="{Binding LastSuccessfulBackupStatus.Text}" HeightRequest="50" VerticalTextAlignment="Start" />
                     </StackLayout>
                 </Grid>
             </StackLayout>
