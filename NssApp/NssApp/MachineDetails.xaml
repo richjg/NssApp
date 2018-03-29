@@ -33,9 +33,9 @@
                 </Grid>
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
-                <Label FontSize="20" Text="Protection" />
+                <Label FontSize="20" Text="Protection Level" />
             </StackLayout>
-            <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
+            <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
                 <ListView ItemsSource="{Binding MachineProtection.ProtectedLevels}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -50,7 +50,8 @@
                                             </OnPlatform>
                                         </Label.FontFamily>
                                     </Label>
-                                    <Label Text="{Binding ProtectionLevel.Description}" FontSize="15" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                                    <Label FontSize="15" Text="{Binding EntityType}"  VerticalTextAlignment="Center" />
+                                    <Label Text="{Binding ProtectionLevel.Description}" FontSize="15" VerticalTextAlignment="Center" HorizontalOptions="EndAndExpand" LineBreakMode="TailTruncation" />
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>
