@@ -6,30 +6,28 @@
     <ContentPage.Content>
         <ListView IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding PullToRefreshCommand}">
             <ListView.Header>
-            <Grid Padding="40" x:Name="grid">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                    <ColumnDefinition Width="50*"></ColumnDefinition>
-                    <ColumnDefinition Width="25*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                </Grid.RowDefinitions>
-                <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="#ea683c" Padding="10">
-                    <Label FontSize="15" Text="Attention" TextColor="White" />
-                        <Label FontSize="80" TextColor="White" Margin="0,40,0,0" Text="{Binding RedCount}" />
-                </StackLayout>
-                <StackLayout Grid.Row="1" Grid.Column="1" BackgroundColor="#fcb53e" Padding="10">
-                    <Label FontSize="15" Text="Unprotected" TextColor="White" />
-                        <Label FontSize="80" TextColor="White" Margin="0,40,0,0" Text="{Binding AmberCount}" />
-                </StackLayout>
-                <StackLayout Grid.Row="2" Grid.Column="1" BackgroundColor="#bdcc2a" Padding="10">
-                    <Label FontSize="15" Text="Protected" TextColor="White" />
-                        <Label FontSize="80" TextColor="White" Margin="0,40,0,0" Text="{Binding GreenCount}"/>
-                </StackLayout>
-            </Grid>
+                <Grid Padding="5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <StackLayout Grid.Row="0" Grid.Column="0" BackgroundColor="#ea683c" Padding="10">
+                        <Label FontSize="15" TextColor="White" Text="Attention" />
+                        <Label FontSize="80" TextColor="White" Text="{Binding RedCount}" />
+                    </StackLayout>
+                    <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="#fcb53e" Padding="10">
+                        <Label FontSize="15" TextColor="White" Text="Unprotected" />
+                        <Label FontSize="80" TextColor="White" Text="{Binding AmberCount}" />
+                    </StackLayout>
+                    <StackLayout Grid.Row="0" Grid.Column="2" BackgroundColor="#bdcc2a" Padding="10">
+                        <Label FontSize="15" TextColor="White" Text="Protected" />
+                        <Label FontSize="80" TextColor="White" Text="{Binding GreenCount}"/>
+                    </StackLayout>
+                </Grid>
             </ListView.Header>
         </ListView>
     </ContentPage.Content>
