@@ -38,6 +38,9 @@ namespace NssApp.ViewModels
             t = value;
             OnPropertyChanged(name);
         }
+        
+        private bool _hasProtectionLevels;
+        public bool HasProtectionLevels { get => this._hasProtectionLevels; set => this.SetPropertyValue(ref _hasProtectionLevels, value, nameof(HasProtectionLevels)); }
 
         private Machine _machine;
         public Machine Machine { get => this._machine; set => this.SetPropertyValue(ref _machine, value, nameof(Machine)); }
@@ -66,6 +69,7 @@ namespace NssApp.ViewModels
         private async void PageOnAppearing(object sender, EventArgs e)
         {
             this.MachineProtection = await this.nssRestApiService.GetMachineProtection(this.Machine.Id).ResolveData(this._CurrentPage);
+            this.HasProtectionLevels = this.MachineProtection.ProtectedLevels.Any();
             this.AvailableProtectionLevels = await this.nssRestApiService.GetAvailableMachineProtectionLevels(this.Machine.Id).ResolveData(this._CurrentPage);
             this.ProtectionStatus = this.GetProtectionStatus(this.MachineProtection);
             this.LastSuccessfulBackupStatus = this.GetLastSuccessfulBackupStatus(await this.nssRestApiService.GetMachineImages(this.Machine.Id).ResolveData(this._CurrentPage));

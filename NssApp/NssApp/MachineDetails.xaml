@@ -33,10 +33,10 @@
                 </Grid>
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
-                <Label FontSize="20" Text="Protection Level" />
-            </StackLayout>
-            <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
                 <ListView ItemsSource="{Binding MachineProtection.ProtectedLevels}">
+                    <ListView.Header>
+                        <Label FontSize="20" Text="Protection Level" IsVisible="{Binding HasProtectionLevels}" />
+                    </ListView.Header>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
