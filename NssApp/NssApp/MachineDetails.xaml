@@ -15,7 +15,9 @@
                         <ColumnDefinition Width="*"></ColumnDefinition>
                         <ColumnDefinition Width="*"></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <StackLayout Grid.Row="0" Grid.Column="0" BackgroundColor="#ffffff" Padding="10">
+                    <StackLayout Grid.Row="0" Grid.Column="0" BackgroundColor="#76b0bd" Padding="10">
+                        <Label FontSize="20" TextColor="White" Text="Consumed Capacity" />
+                        <Label FontSize="12" TextColor="White" Text="0" />
                     </StackLayout>
                     <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="{Binding ProtectionStatus.Color}" Padding="10">
                         <Label FontSize="20" TextColor="White" Text="{Binding ProtectionStatus.Title}" />
