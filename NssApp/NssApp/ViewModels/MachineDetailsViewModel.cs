@@ -48,7 +48,16 @@ namespace NssApp.ViewModels
         private List<ApiProtectionLevel> _availableProtectionLevels;
         public List<ApiProtectionLevel> AvailableProtectionLevels { get => this._availableProtectionLevels; set => this.SetPropertyValue(ref _availableProtectionLevels, value, nameof(AvailableProtectionLevels)); }
 
+        private Tile _protectionStatus;
+        public Tile ProtectionStatus { get => this._protectionStatus; set => this.SetPropertyValue(ref _protectionStatus, value, nameof(ProtectionStatus)); }
 
+
+        public class Tile
+        {
+            public string Title { get; set; }
+            public string Color { get; set; }
+            public string Text { get; set; }
+        }
 
         public ICommand ShowProtectionOptionsCommand { get => new Command(async () => await ShowProtectionOptions()); }
 
@@ -56,13 +65,40 @@ namespace NssApp.ViewModels
         {
             this.MachineProtection = await this.nssRestApiService.GetMachineProtection(this.Machine.Id).ResolveData(this._CurrentPage);
             this.AvailableProtectionLevels = await this.nssRestApiService.GetAvailableMachineProtectionLevels(this.Machine.Id).ResolveData(this._CurrentPage);
+            this.ProtectionStatus = this.GetProtectionStatus(this.MachineProtection);
+        }
 
-            //this.MachineProtection.ProtectedLevels[0].ProtectionLevel.Color.Policies[0].
+        private Tile GetProtectionStatus(MachineProtection machineProtection)
+        {
+            var tile = new Tile
+            {
+                Title = "Protection Status"
+            };
+
+            if (machineProtection.ProtectedLevels.Any() == false)
+            {
+                tile.Color = "#fcb53e";
+                tile.Text = "Not protected";
+            }
+            else
+            {
+                if (machineProtection.ProtectedLevels.SelectMany(l => l.Policies).Any(mp => mp.IsWithinThreshold == false))
+                {
+                    tile.Color = "#ea683c";
+                    tile.Text = "Some backups have exceeded threshold";
+                }
+                else
+                {
+                    tile.Color = "#bdcc2a";
+                    tile.Text = "Backup health is good";
+                }
+            }
+
+            return tile;
         }
 
         private async Task ShowProtectionOptions()
         {
-//            var selected = await this._CurrentPage.DisplayActionSheet("Protect", "Close", null, new[] { "Gold", "Silver", "Bronze" });
             if(this.AvailableProtectionLevels != null)
             {
                 var levelNames= this.AvailableProtectionLevels.Select(p => p.Name).ToArray();
