@@ -115,6 +115,11 @@ namespace NssApp.RestApi
             return SendGet<List<ApiProtectionLevel>> ($"v6/machines/{machineId}/protection/levels");
         }
 
+        public Task<RestResult<List<MachineImage>>> GetMachineImages(int machineId)
+        {
+            return SendGet<List<MachineImage>>($"v6/machines/{machineId}/backupimages");
+        }
+
         private Task<HttpResponseMessage> SendGet(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, url));
         private Task<HttpResponseMessage> SendPost<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
         private Task<HttpResponseMessage> SendPut<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Put, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });

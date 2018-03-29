@@ -51,6 +51,8 @@ namespace NssApp.ViewModels
         private Tile _protectionStatus;
         public Tile ProtectionStatus { get => this._protectionStatus; set => this.SetPropertyValue(ref _protectionStatus, value, nameof(ProtectionStatus)); }
 
+        private Tile _lastSuccessfulBackupStatus;
+        public Tile LastSuccessfulBackupStatus { get => this._lastSuccessfulBackupStatus; set => this.SetPropertyValue(ref _lastSuccessfulBackupStatus, value, nameof(LastSuccessfulBackupStatus)); }
 
         public class Tile
         {
@@ -66,6 +68,7 @@ namespace NssApp.ViewModels
             this.MachineProtection = await this.nssRestApiService.GetMachineProtection(this.Machine.Id).ResolveData(this._CurrentPage);
             this.AvailableProtectionLevels = await this.nssRestApiService.GetAvailableMachineProtectionLevels(this.Machine.Id).ResolveData(this._CurrentPage);
             this.ProtectionStatus = this.GetProtectionStatus(this.MachineProtection);
+            this.LastSuccessfulBackupStatus = this.GetLastSuccessfulBackupStatus(await this.nssRestApiService.GetMachineImages(this.Machine.Id).ResolveData(this._CurrentPage));
         }
 
         private Tile GetProtectionStatus(MachineProtection machineProtection)
@@ -92,6 +95,27 @@ namespace NssApp.ViewModels
                     tile.Color = "#bdcc2a";
                     tile.Text = "Backup health is good";
                 }
+            }
+
+            return tile;
+        }
+
+        private Tile GetLastSuccessfulBackupStatus(List<MachineImage> machineImages)
+        {
+            var tile = new Tile
+            {
+                Title = "Last Backup"
+            };
+
+            if (machineImages.Any(i => i.IsExpired == false))
+            {
+                tile.Color = "#bdcc2a";
+                tile.Text = machineImages.OrderByDescending(i => i.BackupTime).First().BackupTime.ToShortDateString();
+            }
+            else
+            {
+                tile.Color = "#fcb53e";
+                tile.Text = "No backups found for this computer";
             }
 
             return tile;

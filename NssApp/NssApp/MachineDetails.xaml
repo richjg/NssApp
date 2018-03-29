@@ -21,7 +21,9 @@
                         <Label FontSize="20" TextColor="White" Text="{Binding ProtectionStatus.Title}" />
                         <Label FontSize="12" TextColor="White" Text="{Binding ProtectionStatus.Text}" />
                     </StackLayout>
-                    <StackLayout Grid.Row="0" Grid.Column="2" BackgroundColor="#ffffff" Padding="10">
+                    <StackLayout Grid.Row="0" Grid.Column="2" BackgroundColor="{Binding LastSuccessfulBackupStatus.Color}" Padding="10">
+                        <Label FontSize="20" TextColor="White" Text="{Binding LastSuccessfulBackupStatus.Title}" />
+                        <Label FontSize="12" TextColor="White" Text="{Binding LastSuccessfulBackupStatus.Text}" />
                     </StackLayout>
                 </Grid>
             </StackLayout>
