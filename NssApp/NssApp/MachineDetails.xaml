@@ -6,7 +6,7 @@
     <ContentPage.Content>
         <StackLayout Padding="10">
             <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
-                <Label FontSize="30" Text="{Binding Machine.DisplayName}" />
+                <Label FontSize="30" Text="{Binding Machine.DisplayName}" LineBreakMode="TailTruncation" />
             </StackLayout>
             <StackLayout>
                 <Grid>
