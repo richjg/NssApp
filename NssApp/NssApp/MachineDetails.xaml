@@ -6,7 +6,7 @@
     <ContentPage.Content>
         <StackLayout Padding="10">
             <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
-                <Label FontSize="20" Text="{Binding Machine.DisplayName}" />
+                <Label FontSize="30" Text="{Binding Machine.DisplayName}" />
             </StackLayout>
             <StackLayout>
                 <Grid>
@@ -32,14 +32,16 @@
                     </StackLayout>
                 </Grid>
             </StackLayout>
+            <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
+                <Label FontSize="20" Text="Protection" />
+            </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="CenterAndExpand">
-                <Label Text="Protection" HorizontalOptions="Fill" ></Label>
                 <ListView ItemsSource="{Binding MachineProtection.ProtectedLevels}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <StackLayout Orientation="Horizontal" Padding="10">
-                                    <Label Text="&#xF108;" TextColor="{Binding ProtectionLevel.Color}" FontSize="12" VerticalTextAlignment="Center">
+                                <StackLayout Orientation="Horizontal">
+                                    <Label Text="&#xF14A;" TextColor="{Binding ProtectionLevel.Color}" FontSize="30" VerticalTextAlignment="Center">
                                         <Label.FontFamily>
                                             <OnPlatform x:TypeArguments="x:String">
                                                 <On Platform="iOS" Value="FontAwesome" />
