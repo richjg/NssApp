@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using ByteSizeLib;
 using Xamarin.Forms;
 
 namespace NssApp.ViewModels
@@ -150,11 +151,11 @@ namespace NssApp.ViewModels
             var latest = machineUtilisationMonths.OrderByDescending(m => m.Month).FirstOrDefault();
             if (latest != null)
             {
-                tile.Text = latest.EndTotalTransferredSizeBytes.ToString();
+                tile.Text = $"{ByteSize.FromBytes(latest.EndTotalImageSizeBytes).LargestWholeNumberValue:0} {ByteSize.FromBytes(latest.EndTotalImageSizeBytes).LargestWholeNumberSymbol}";
             }
             else
             {
-                tile.Text = 0.ToString();
+                tile.Text = "0";
             }
 
             return tile;
