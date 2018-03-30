@@ -120,6 +120,11 @@ namespace NssApp.RestApi
             return SendGet<List<MachineImage>>($"v6/machines/{machineId}/backupimages");
         }
 
+        public Task<RestResult<List<MachineUtilisationMonth>>> GetMachineUtilisationMonths(int machineId)
+        {
+            return SendGet<List<MachineUtilisationMonth>>($"v6/utilization/machinemonths?$filter=MachineId eq {machineId}");
+        }
+
         private Task<HttpResponseMessage> SendGet(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, url));
         private Task<HttpResponseMessage> SendPost<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
         private Task<HttpResponseMessage> SendPut<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Put, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
@@ -226,9 +231,6 @@ namespace NssApp.RestApi
 
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginResponse.AccessToken);
 
-                    ///v6/system/user
-                    var userInfoReponse = await client.GetAsync("v6/system/user");
-                    var loggedInUserInfo = await userInfoReponse.Content.FromJsonAsync<ApiResult<LoggedInUserInfo>>();
                     this.userCredentialStore.SetCredentials(new LoginSettings { AccessToken = loginResponse.AccessToken, BaseUrl = url, Password = password, Username = username });
                     NssRestApiService.AuthenticationFailed = false;
                     return true;

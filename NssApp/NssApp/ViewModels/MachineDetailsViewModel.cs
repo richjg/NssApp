@@ -57,6 +57,9 @@ namespace NssApp.ViewModels
         private Tile _lastSuccessfulBackupStatus;
         public Tile LastSuccessfulBackupStatus { get => this._lastSuccessfulBackupStatus; set => this.SetPropertyValue(ref _lastSuccessfulBackupStatus, value, nameof(LastSuccessfulBackupStatus)); }
 
+        private Tile _consumedCapacity;
+        public Tile ConsumedCapacity { get => this._consumedCapacity; set => this.SetPropertyValue(ref _consumedCapacity, value, nameof(ConsumedCapacity)); }
+
         public class Tile
         {
             public string Title { get; set; }
@@ -73,6 +76,16 @@ namespace NssApp.ViewModels
             this.AvailableProtectionLevels = await this.nssRestApiService.GetAvailableMachineProtectionLevels(this.Machine.Id).ResolveData(this._CurrentPage);
             this.ProtectionStatus = this.GetProtectionStatus(this.MachineProtection);
             this.LastSuccessfulBackupStatus = this.GetLastSuccessfulBackupStatus(await this.nssRestApiService.GetMachineImages(this.Machine.Id).ResolveData(this._CurrentPage));
+
+            var loggedInUser = await this.nssRestApiService.GetCurrentUserInfo();
+            if (loggedInUser.IsMsp || loggedInUser.IsTenantAdmin)
+            {
+                this.ConsumedCapacity = this.GetConsumedCapacity(await this.nssRestApiService.GetMachineUtilisationMonths(this.Machine.Id).ResolveData(this._CurrentPage));
+            }
+            else
+            {
+                this.ConsumedCapacity = this.GetConsumedCapacity(new List<MachineUtilisationMonth>());
+            }
         }
 
         private Tile GetProtectionStatus(MachineProtection machineProtection)
@@ -120,6 +133,28 @@ namespace NssApp.ViewModels
             {
                 tile.Color = "#fcb53e";
                 tile.Text = "No backups found for this computer";
+            }
+
+            return tile;
+        }
+
+        private Tile GetConsumedCapacity(List<MachineUtilisationMonth> machineUtilisationMonths)
+        {
+            var tile = new Tile
+            {
+                Title = "Consumed Capacity"
+            };
+
+            tile.Color = "#76b0bd";
+
+            var latest = machineUtilisationMonths.OrderByDescending(m => m.Month).FirstOrDefault();
+            if (latest != null)
+            {
+                tile.Text = latest.EndTotalTransferredSizeBytes.ToString();
+            }
+            else
+            {
+                tile.Text = 0.ToString();
             }
 
             return tile;
