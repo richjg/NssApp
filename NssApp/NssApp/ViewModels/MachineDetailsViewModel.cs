@@ -151,6 +151,7 @@ namespace NssApp.ViewModels
             var latest = machineUtilisationMonths.OrderByDescending(m => m.Date).FirstOrDefault();
             if (latest != null)
             {
+                //TODO: Decide if we should use EndTotalImageSizeBytes or EndTotalTransferredSizeBytes based on integration setting 'Use Data Transferred values'
                 tile.Text = $"{ByteSize.FromBytes(latest.EndTotalImageSizeBytes).LargestWholeNumberValue:0} {ByteSize.FromBytes(latest.EndTotalImageSizeBytes).LargestWholeNumberSymbol}";
             }
             else
