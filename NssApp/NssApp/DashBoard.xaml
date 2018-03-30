@@ -16,16 +16,16 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackLayout Grid.Row="0" Grid.Column="0" BackgroundColor="#ea683c" Padding="10">
-                        <Label FontSize="15" TextColor="White" Text="Attention" />
-                        <Label FontSize="80" TextColor="White" Text="{Binding RedCount}" />
+                        <Label FontSize="15" TextColor="White" HeightRequest="50" Text="Attention" />
+                        <Label FontSize="60" TextColor="White" HeightRequest="90" Text="{Binding RedCount}" VerticalTextAlignment="Start" />
                     </StackLayout>
                     <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="#fcb53e" Padding="10">
-                        <Label FontSize="15" TextColor="White" Text="Unprotected" />
-                        <Label FontSize="80" TextColor="White" Text="{Binding AmberCount}" />
+                        <Label FontSize="15" TextColor="White" HeightRequest="50" Text="Unprotected" />
+                        <Label FontSize="60" TextColor="White" HeightRequest="90" Text="{Binding AmberCount}" VerticalTextAlignment="Start" />
                     </StackLayout>
                     <StackLayout Grid.Row="0" Grid.Column="2" BackgroundColor="#bdcc2a" Padding="10">
-                        <Label FontSize="15" TextColor="White" Text="Protected" />
-                        <Label FontSize="80" TextColor="White" Text="{Binding GreenCount}"/>
+                        <Label FontSize="15" TextColor="White" HeightRequest="50" Text="Protected" />
+                        <Label FontSize="60" TextColor="White" HeightRequest="90" Text="{Binding GreenCount}" VerticalTextAlignment="Start" />
                     </StackLayout>
                 </Grid>
             </ListView.Header>
