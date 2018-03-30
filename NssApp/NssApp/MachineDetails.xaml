@@ -19,16 +19,16 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackLayout Grid.Row="0" Grid.Column="0" BackgroundColor="#76b0bd" Padding="10">
-                        <Label FontSize="20" TextColor="White" Text="Consumed Capacity" HeightRequest="50" />
-                        <Label FontSize="12" TextColor="White" Text="0" HeightRequest="50" VerticalTextAlignment="Start" />
+                        <Label FontSize="15" TextColor="White" HeightRequest="30" Text="Consumed Capacity" />
+                        <Label FontSize="60" TextColor="White" HeightRequest="100" Text="0" VerticalTextAlignment="Start" />
                     </StackLayout>
                     <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="{Binding ProtectionStatus.Color}" Padding="10">
-                        <Label FontSize="20" TextColor="White" Text="{Binding ProtectionStatus.Title}" HeightRequest="50" />
-                        <Label FontSize="12" TextColor="White" Text="{Binding ProtectionStatus.Text}" HeightRequest="50" VerticalTextAlignment="Start" />
+                        <Label FontSize="15" TextColor="White" HeightRequest="40" Text="{Binding ProtectionStatus.Title}" />
+                        <Label FontSize="12" TextColor="White" HeightRequest="100" Text="{Binding ProtectionStatus.Text}" VerticalTextAlignment="Start" />
                     </StackLayout>
                     <StackLayout Grid.Row="0" Grid.Column="2" BackgroundColor="{Binding LastSuccessfulBackupStatus.Color}" Padding="10">
-                        <Label FontSize="20" TextColor="White" Text="{Binding LastSuccessfulBackupStatus.Title}" HeightRequest="50" />
-                        <Label FontSize="12" TextColor="White" Text="{Binding LastSuccessfulBackupStatus.Text}" HeightRequest="50" VerticalTextAlignment="Start" />
+                        <Label FontSize="15" TextColor="White" HeightRequest="40" Text="{Binding LastSuccessfulBackupStatus.Title}" />
+                        <Label FontSize="12" TextColor="White" HeightRequest="100" Text="{Binding LastSuccessfulBackupStatus.Text}" VerticalTextAlignment="Start" />
                     </StackLayout>
                 </Grid>
             </StackLayout>
