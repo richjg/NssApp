@@ -148,7 +148,7 @@ namespace NssApp.ViewModels
 
             tile.Color = "#76b0bd";
 
-            var latest = machineUtilisationMonths.OrderByDescending(m => m.Month).FirstOrDefault();
+            var latest = machineUtilisationMonths.OrderByDescending(m => m.Date).FirstOrDefault();
             if (latest != null)
             {
                 tile.Text = $"{ByteSize.FromBytes(latest.EndTotalImageSizeBytes).LargestWholeNumberValue:0} {ByteSize.FromBytes(latest.EndTotalImageSizeBytes).LargestWholeNumberSymbol}";

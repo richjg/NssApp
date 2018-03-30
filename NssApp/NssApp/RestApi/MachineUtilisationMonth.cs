@@ -8,7 +8,7 @@ namespace NssApp.RestApi
     {
         public int Id { get; set; }
         public int MachineId { get; set; }
-        public int Month { get; set; }
+        public DateTime Date { get; set; }
         public long EndTotalImageSizeBytes { get; set; }
         public long EndTotalTransferredSizeBytes { get; set; }
     }
