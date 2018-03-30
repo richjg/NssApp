@@ -38,16 +38,16 @@ namespace NssApp.ViewModels
         private bool _isRefreshing = false;
         public bool IsRefreshing { get => this._isRefreshing; set => this.SetPropertyValue(ref _isRefreshing, value, nameof(IsRefreshing)); }
 
-        private string _redCount;
-        public string RedCount { get => this._redCount; set => SetPropertyValue(ref _redCount, value, nameof(RedCount)); }
+        private Tile _attentionTile;
+        public Tile AttentionTile { get => this._attentionTile; set => SetPropertyValue(ref _attentionTile, value, nameof(AttentionTile)); }
 
-        private string _amberCount;
-        public string AmberCount { get => this._amberCount; set => SetPropertyValue(ref _amberCount, value, nameof(AmberCount)); }
+        private Tile _unprotectedTile;
+        public Tile UnprotectedTile { get => this._unprotectedTile; set => SetPropertyValue(ref _unprotectedTile, value, nameof(UnprotectedTile)); }
 
-        private string _greenCount;
+        private Tile _protectedTile;
+        public Tile ProtectedTile { get => this._protectedTile; set => SetPropertyValue(ref _protectedTile, value, nameof(ProtectedTile)); }
+
         private readonly NssRestApiService nssRestApiService;
-
-        public string GreenCount { get => this._greenCount; set => SetPropertyValue(ref _greenCount, value, nameof(GreenCount)); }
 
         public ICommand PullToRefreshCommand
         {
@@ -73,9 +73,9 @@ namespace NssApp.ViewModels
                 var trafficLightCounts = await nssRestApiService.GetTrafficLightCounts().ResolveData(this._CurrentPage/*App.Current.MainPage*/);
                 if (trafficLightCounts != null)
                 {
-                    RedCount = trafficLightCounts.RedCount;
-                    AmberCount = trafficLightCounts.AmberCount;
-                    GreenCount = trafficLightCounts.GreenCount;
+                    AttentionTile = new Tile { Color = "#ea683c", Title = "Attention", Text = trafficLightCounts.RedCount };
+                    UnprotectedTile = new Tile { Color = "#fcb53e", Title = "Unprotected", Text = trafficLightCounts.AmberCount };
+                    ProtectedTile = new Tile { Color = "#bdcc2a", Title = "Protected", Text = trafficLightCounts.GreenCount };
                 }
             }
             finally

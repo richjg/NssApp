@@ -61,13 +61,6 @@ namespace NssApp.ViewModels
         private Tile _consumedCapacity;
         public Tile ConsumedCapacity { get => this._consumedCapacity; set => this.SetPropertyValue(ref _consumedCapacity, value, nameof(ConsumedCapacity)); }
 
-        public class Tile
-        {
-            public string Title { get; set; }
-            public string Color { get; set; }
-            public string Text { get; set; }
-        }
-
         public ICommand ShowProtectionOptionsCommand { get => new Command(async () => await ShowProtectionOptions()); }
 
         private async void PageOnAppearing(object sender, EventArgs e)
