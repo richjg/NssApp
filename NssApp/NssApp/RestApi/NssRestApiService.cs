@@ -125,6 +125,11 @@ namespace NssApp.RestApi
             return SendGet<List<MachineUtilisationMonth>>($"v6/utilization/machinemonths?$filter=MachineId eq {machineId}");
         }
 
+        public Task<RestResult<List<SystemUtilisationMonth>>> GetSystemUtilisationMonths()
+        {
+            return SendGet<List<SystemUtilisationMonth>>($"v6/utilization/systemmonths");
+        }
+
         private Task<HttpResponseMessage> SendGet(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, url));
         private Task<HttpResponseMessage> SendPost<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
         private Task<HttpResponseMessage> SendPut<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Put, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
