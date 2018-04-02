@@ -55,6 +55,9 @@ namespace NssApp.ViewModels
         private Tile _consumedCapacityTile;
         public Tile ConsumedCapacityTile { get => this._consumedCapacityTile; set => SetPropertyValue(ref _consumedCapacityTile, value, nameof(ConsumedCapacityTile)); }
 
+        private List<DataSourceItem> _chartData;
+        public List<DataSourceItem> ChartData { get => this._chartData; set => SetPropertyValue(ref _chartData, value, nameof(ChartData)); }
+
         private readonly NssRestApiService nssRestApiService;
 
         public ICommand PullToRefreshCommand
@@ -90,13 +93,15 @@ namespace NssApp.ViewModels
 
                 if (IsUserMsp)
                 {
+                    var systemUtilisationMonths = await nssRestApiService.GetSystemUtilisationMonths().ResolveData(this._CurrentPage);
+
                     var tile = new Tile
                     {
                         Color = "#76b0bd",
                         Title = "Consumed Capacity",
                         Text = "0"
                     };
-                    var latest = (await nssRestApiService.GetSystemUtilisationMonths().ResolveData(this._CurrentPage)).OrderByDescending(m => m.Date).FirstOrDefault();
+                    var latest = systemUtilisationMonths.OrderByDescending(m => m.Date).FirstOrDefault();
                     if (latest != null)
                     {
                         //TODO: Decide if we should use EndTotalImageSizeBytes or EndTotalTransferredSizeBytes based on integration setting 'Use Data Transferred values'
@@ -104,12 +109,27 @@ namespace NssApp.ViewModels
                     }
 
                     ConsumedCapacityTile = tile;
+
+                    //TODO: Decide if we should use EndTotalImageSizeBytes or EndTotalTransferredSizeBytes based on integration setting 'Use Data Transferred values'
+                    ChartData = systemUtilisationMonths.OrderByDescending(m => m.Date).Take(6).Select(m => new RestDataPoint { DateTime = m.Date, Value = m.NewTransferredSizeBytes }).ToList().AddMonthlyDataPointsAndOrder(6);
                 }
             }
             finally
             {
                 this.IsRefreshing = false;
             }
+        }
+
+        public class RestDataPoint
+        {
+            public DateTime DateTime { get; set; }
+            public long Value { get; set; }
+        }
+
+        public class DataSourceItem
+        {
+            public string Label { get; set; }
+            public decimal Value { get; set; }
         }
     }
 }

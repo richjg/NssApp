@@ -10,5 +10,6 @@ namespace NssApp.RestApi
         public DateTime Date { get; set; }
         public long EndTotalImageSizeBytes { get; set; }
         public long EndTotalTransferredSizeBytes { get; set; }
+        public long NewTransferredSizeBytes { get; set; }
     }
 }

@@ -32,6 +32,19 @@
                         <Label FontSize="15" TextColor="White" HeightRequest="50" Text="{Binding ConsumedCapacityTile.Title}" />
                         <Label FontSize="60" TextColor="White" HeightRequest="90" Text="{Binding ConsumedCapacityTile.Text}" VerticalTextAlignment="Start" />
                     </StackLayout>
+                    <StackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" BackgroundColor="#838b8f" Padding="10" IsVisible="{Binding IsUserMsp}">
+                        <telerikChart:RadCartesianChart>
+                            <telerikChart:RadCartesianChart.HorizontalAxis>
+                                <telerikChart:CategoricalAxis LineColor="White" LabelTextColor="White" MajorTickBackgroundColor="White" />
+                            </telerikChart:RadCartesianChart.HorizontalAxis>
+                            <telerikChart:RadCartesianChart.VerticalAxis>
+                                <telerikChart:NumericalAxis LineColor="White" LabelTextColor="White" MajorTickBackgroundColor="White" />
+                            </telerikChart:RadCartesianChart.VerticalAxis>
+                            <telerikChart:RadCartesianChart.Series>
+                                <telerikChart:BarSeries CategoryBinding="Label" ValueBinding="Value" ItemsSource="{Binding ChartData}" />
+                            </telerikChart:RadCartesianChart.Series>
+                        </telerikChart:RadCartesianChart>
+                    </StackLayout>
                 </Grid>
             </ListView.Header>
         </ListView>
