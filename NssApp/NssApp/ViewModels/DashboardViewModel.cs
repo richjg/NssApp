@@ -84,9 +84,9 @@ namespace NssApp.ViewModels
                 var trafficLightCounts = await nssRestApiService.GetTrafficLightCounts().ResolveData(this._CurrentPage/*App.Current.MainPage*/);
                 if (trafficLightCounts != null)
                 {
-                    AttentionTile = new Tile { Color = "#ea683c", Title = "Attention", Text = trafficLightCounts.RedCount };
-                    UnprotectedTile = new Tile { Color = "#fcb53e", Title = "Unprotected", Text = trafficLightCounts.AmberCount };
-                    ProtectedTile = new Tile { Color = "#bdcc2a", Title = "Protected", Text = trafficLightCounts.GreenCount };
+                    AttentionTile = new Tile { Color = "#ea683c", Title = "Attention", Text = GetTrafficLightValue(trafficLightCounts.RedCount) };
+                    UnprotectedTile = new Tile { Color = "#fcb53e", Title = "Unprotected", Text = GetTrafficLightValue(trafficLightCounts.AmberCount) };
+                    ProtectedTile = new Tile { Color = "#bdcc2a", Title = "Protected", Text = GetTrafficLightValue(trafficLightCounts.GreenCount) };
                 }
 
                 IsUserMsp = (await nssRestApiService.GetCurrentUserInfo()).IsMsp;
@@ -117,6 +117,18 @@ namespace NssApp.ViewModels
             finally
             {
                 this.IsRefreshing = false;
+            }
+        }
+
+        private string GetTrafficLightValue(int count)
+        {
+            if (count > 9999)
+            {
+                return  (count / 1000).ToString("N0") + "k";
+            }
+            else
+            {
+                return count.ToString("N0");
             }
         }
 

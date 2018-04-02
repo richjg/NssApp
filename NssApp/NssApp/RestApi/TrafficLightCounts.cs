@@ -2,8 +2,8 @@
 {
     public class TrafficLightCounts
     {
-        public string RedCount { get; set; }
-        public string AmberCount { get; set; }
-        public string GreenCount { get; set; }
+        public int RedCount { get; set; }
+        public int AmberCount { get; set; }
+        public int GreenCount { get; set; }
     }
 }
