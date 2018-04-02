@@ -20,7 +20,7 @@
                     </Grid.RowDefinitions>
                     <StackLayout Grid.Row="0" Grid.Column="0" BackgroundColor="{Binding ConsumedCapacity.Color}" Padding="10">
                         <Label FontSize="15" TextColor="White" HeightRequest="30" Text="{Binding ConsumedCapacity.Title}" />
-                        <Label FontSize="60" TextColor="White" HeightRequest="100" Text="{Binding ConsumedCapacity.Text}" VerticalTextAlignment="Start" />
+                        <Label FontSize="45" TextColor="White" HeightRequest="100" Text="{Binding ConsumedCapacity.Text}" VerticalTextAlignment="Start" />
                     </StackLayout>
                     <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="{Binding ProtectionStatus.Color}" Padding="10">
                         <Label FontSize="15" TextColor="White" HeightRequest="40" Text="{Binding ProtectionStatus.Title}" />
