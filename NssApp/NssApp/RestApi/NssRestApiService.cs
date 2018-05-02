@@ -82,9 +82,14 @@ namespace NssApp.RestApi
             return SendGet<List<SystemUtilisationMonth>>($"v6/utilization/systemmonths");
         }
 
+        public Task<RestResult<Activity>> ProtectMachine(int machineId, int protectionLevelId)
+        {
+            return SendPost<Activity>($"v6/machines/{machineId}/protect", new { protectionLevelId });
+        }
+
         private Task<HttpResponseMessage> SendGet(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, url));
-        private Task<HttpResponseMessage> SendPost<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
-        private Task<HttpResponseMessage> SendPut<T>(string url, T jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Put, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject)) });
+        private Task<HttpResponseMessage> SendPost(string url, object jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject) ?? string.Empty, System.Text.Encoding.UTF8, "application/json") });
+        private Task<HttpResponseMessage> SendPut(string url, object jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Put, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject) ?? string.Empty, System.Text.Encoding.UTF8, "application/json") });
         private Task<HttpResponseMessage> SendDelete(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Delete, url));
 
         private async Task<RestResult<T>> SendGet<T>(string url)
@@ -92,6 +97,24 @@ namespace NssApp.RestApi
             var result = await SendGet(url);
 
             if (result.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                var apiResult = await result.Content.FromJsonAsync<ApiResult<T>>();
+                return apiResult.Data;
+            }
+
+            if (result.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            {
+                return new RestResultLoginRequired();
+            }
+
+            return new RestResultError { Messages = { new RestResultErrorMessage { Message = result.ReasonPhrase } } };
+        }
+
+        private async Task<RestResult<T>> SendPost<T>(string url, object postData)
+        {
+            var result = await SendPost(url, postData);
+
+            if (result.StatusCode == System.Net.HttpStatusCode.Accepted)
             {
                 var apiResult = await result.Content.FromJsonAsync<ApiResult<T>>();
                 return apiResult.Data;
