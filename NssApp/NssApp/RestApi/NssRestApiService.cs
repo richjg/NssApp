@@ -8,54 +8,6 @@ using System.Threading.Tasks;
 
 namespace NssApp.RestApi
 {
-    public class LoginSettings
-    {
-        public string BaseUrl { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string AccessToken { get; set; }
-    }
-
-    public class HttpClientFactory
-    {
-        private static HttpClient httpClient;
-
-        public void SetAuth(LoginSettings loginSettings, string accessToken)
-        {
-
-        }
-
-        public HttpClient Create(LoginSettings loginSettings)
-        {
-            if(loginSettings == null)
-            {
-                return null;
-            }
-
-            if(httpClient == null)
-            {
-                httpClient = new HttpClient
-                {
-                    BaseAddress = new Uri(loginSettings.BaseUrl)
-                };
-            }
-            else if(httpClient.BaseAddress.OriginalString != loginSettings.BaseUrl)
-            {
-                httpClient = new HttpClient
-                {
-                    BaseAddress = new Uri(loginSettings.BaseUrl)
-                };
-            }
-
-            if(httpClient.DefaultRequestHeaders.Authorization?.Parameter != loginSettings.AccessToken)
-            {
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", loginSettings.AccessToken);
-            }
-
-            return httpClient;
-        }
-    }
-
     public class NssRestApiService
     {
         public static bool AuthenticationFailed;
