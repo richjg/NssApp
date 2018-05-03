@@ -161,8 +161,8 @@ namespace NssApp.ViewModels
                 var selectedLevelName = await this._CurrentPage.DisplayActionSheet("Protect", "Close", null, levelNames);
                 if (String.IsNullOrWhiteSpace(selectedLevelName) == false)
                 {
-                    var selectedLevel = levels.First(l => l.Name == selectedLevelName);
-                    if(selectedLevel.IsBackupNow == false)
+                    var selectedLevel = levels.FirstOrDefault(l => l.Name == selectedLevelName);
+                    if(selectedLevel != null && selectedLevel.IsBackupNow == false)
                     {
                         var activity = await this.nssRestApiService.ProtectMachine(this.Machine.Id, selectedLevel.Id).ResolveData(this._CurrentPage); // not showing errors, what errors would there be?
                         if(activity != null)
