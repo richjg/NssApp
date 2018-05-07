@@ -4,8 +4,10 @@
              x:Class="NssApp.SplashScreen"
              BackgroundColor="#B1171F">
     <ContentPage.Content>
-        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
-            <Label Text="NetBackup Self Service" FontSize="Large" TextColor="White" />
+        <StackLayout HorizontalOptions="CenterAndExpand" Margin="0, 50, 0, 0">
+            <Label HorizontalOptions="CenterAndExpand" Text="Welcome to" FontSize="Micro" TextColor="White" />
+            <Label HorizontalOptions="CenterAndExpand" Text="NetBackup Self Service" FontSize="Large" TextColor="White" />
+            <ActivityIndicator HorizontalOptions="CenterAndExpand" Color="White" IsRunning="True" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
