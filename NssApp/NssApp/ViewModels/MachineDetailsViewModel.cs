@@ -155,8 +155,22 @@ namespace NssApp.ViewModels
         {
             if(this.AvailableProtectionLevels != null)
             {
-                var levelNames= this.AvailableProtectionLevels.Select(p => p.Name).ToArray();
-                var selected = await this._CurrentPage.DisplayActionSheet("Protect", "Close", null, levelNames);
+                //Think we need a proper modal page here as we need to know if its .. this._Navigation.PushModalAsync
+                var levels = this.AvailableProtectionLevels.ToList();
+                var levelNames = this.AvailableProtectionLevels.Select(p => p.Name).ToArray();
+                var selectedLevelName = await this._CurrentPage.DisplayActionSheet("Protect", "Close", null, levelNames);
+                if (String.IsNullOrWhiteSpace(selectedLevelName) == false)
+                {
+                    var selectedLevel = levels.FirstOrDefault(l => l.Name == selectedLevelName);
+                    if(selectedLevel != null && selectedLevel.IsBackupNow == false)
+                    {
+                        var activity = await this.nssRestApiService.ProtectMachine(this.Machine.Id, selectedLevel.Id).ResolveData(this._CurrentPage); // not showing errors, what errors would there be?
+                        if(activity != null)
+                        {
+
+                        }
+                    }
+                }
             }
         }
     }
