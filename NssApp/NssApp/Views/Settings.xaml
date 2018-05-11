@@ -10,11 +10,11 @@
             <Label HorizontalOptions="CenterAndExpand" Text="NetBackup Self Service" FontSize="Large" TextColor="White" />
 
             <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-                <Entry Placeholder="Url" Text="{Binding Url, Mode=TwoWay}" TextColor="White" />
-                <Entry Placeholder="Username" Text="{Binding Username, Mode=TwoWay}" TextColor="White" />
-                <Entry Placeholder="Password" IsPassword="true" Text="{Binding Password, Mode=TwoWay}" TextColor="White" />
+                <Entry Placeholder="Url" Text="{Binding Url, Mode=TwoWay}" />
+                <Entry Placeholder="Username" Text="{Binding Username, Mode=TwoWay}" />
+                <Entry Placeholder="Password" IsPassword="true" Text="{Binding Password, Mode=TwoWay}" />
                 <Button Text="Login" Command="{Binding DoneEditSettingsCommand}" />
-                <Label Text="{Binding LoginFaileMessage}"  TextColor="White" />
+                <Label Text="{Binding LoginFaileMessage}" TextColor="White" />
             </StackLayout>
         </StackLayout>
     </ContentPage.Content>
