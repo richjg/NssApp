@@ -10,4 +10,5 @@
             <local:Machines Title="Machines" NavigationPage.HasNavigationBar="False" />
         </x:Arguments>
     </NavigationPage>
+    <local:More Title="More" />
 </TabbedPage>
