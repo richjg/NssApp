@@ -7,7 +7,7 @@
     <ContentPage.Content>
         <StackLayout Orientation="Vertical">
             <Entry Placeholder="Search" Text="{Binding SearchText, Mode=TwoWay}"></Entry>
-            <ListView x:Name="machineList" RowHeight="60" IsRefreshing="{Binding IsRefreshing}" ItemsSource="{Binding MachineCollection}" >
+            <ListView x:Name="machineList" RowHeight="60" IsRefreshing="{Binding IsRefreshing}" ItemsSource="{Binding MachineCollection}" SeparatorVisibility="None">
                 <ListView.Behaviors>
                     <behavior:ListViewPagingBehavior Command="{Binding LoadMoreCommand}"></behavior:ListViewPagingBehavior>
                     <behavior:ListViewItemSelectedBehavior Command="{Binding MachineSelectedCommand}"></behavior:ListViewItemSelectedBehavior> 

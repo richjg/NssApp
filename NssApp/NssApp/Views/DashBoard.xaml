@@ -5,7 +5,7 @@
              xmlns:telerikChart="clr-namespace:Telerik.XamarinForms.Chart;assembly=Telerik.XamarinForms.Chart"
              x:Class="NssApp.DashBoard">
     <ContentPage.Content>
-        <ListView IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding PullToRefreshCommand}">
+        <ListView IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding PullToRefreshCommand}" SeparatorVisibility="None">
             <ListView.Header>
                 <Grid Padding="5">
                     <Grid.ColumnDefinitions>
