@@ -18,28 +18,28 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackLayout Grid.Row="0" Grid.Column="0" BackgroundColor="{Binding AttentionTile.Color}" Padding="10">
-                        <Label FontSize="15" TextColor="White" HeightRequest="50" Text="{Binding AttentionTile.Title}" />
-                        <Label FontSize="45" TextColor="White" HeightRequest="90" Text="{Binding AttentionTile.Text}" VerticalTextAlignment="Start" />
+                        <Label FontSize="Micro" TextColor="White" HeightRequest="50" Text="{Binding AttentionTile.Title}" />
+                        <Label FontSize="Large" TextColor="White" HeightRequest="90" Text="{Binding AttentionTile.Text}" VerticalTextAlignment="Start" />
                     </StackLayout>
                     <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="{Binding UnprotectedTile.Color}" Padding="10">
-                        <Label FontSize="15" TextColor="White" HeightRequest="50" Text="{Binding UnprotectedTile.Title}" />
-                        <Label FontSize="45" TextColor="White" HeightRequest="90" Text="{Binding UnprotectedTile.Text}" VerticalTextAlignment="Start" />
+                        <Label FontSize="Micro" TextColor="White" HeightRequest="50" Text="{Binding UnprotectedTile.Title}" />
+                        <Label FontSize="Large" TextColor="White" HeightRequest="90" Text="{Binding UnprotectedTile.Text}" VerticalTextAlignment="Start" />
                     </StackLayout>
                     <StackLayout Grid.Row="0" Grid.Column="2" BackgroundColor="{Binding ProtectedTile.Color}" Padding="10">
-                        <Label FontSize="15" TextColor="White" HeightRequest="50" Text="{Binding ProtectedTile.Title}" />
-                        <Label FontSize="45" TextColor="White" HeightRequest="90" Text="{Binding ProtectedTile.Text}" VerticalTextAlignment="Start" />
+                        <Label FontSize="Micro" TextColor="White" HeightRequest="50" Text="{Binding ProtectedTile.Title}" />
+                        <Label FontSize="Large" TextColor="White" HeightRequest="90" Text="{Binding ProtectedTile.Text}" VerticalTextAlignment="Start" />
                     </StackLayout>
                     <StackLayout Grid.Row="1" Grid.Column="0" BackgroundColor="{Binding ConsumedCapacityTile.Color}" Padding="10" IsVisible="{Binding IsUserMsp}">
-                        <Label FontSize="15" TextColor="White" HeightRequest="50" Text="{Binding ConsumedCapacityTile.Title}" />
-                        <Label FontSize="45" TextColor="White" HeightRequest="90" Text="{Binding ConsumedCapacityTile.Text}" VerticalTextAlignment="Start" />
+                        <Label FontSize="Micro" TextColor="White" HeightRequest="50" Text="{Binding ConsumedCapacityTile.Title}" />
+                        <Label FontSize="Large" TextColor="White" HeightRequest="90" Text="{Binding ConsumedCapacityTile.Text}" VerticalTextAlignment="Start" />
                     </StackLayout>
-                    <StackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" BackgroundColor="#838b8f" Padding="10" IsVisible="{Binding IsUserMsp}">
+                    <StackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" BackgroundColor="#838b8f" Padding="2" IsVisible="{Binding IsUserMsp}">
                         <telerikChart:RadCartesianChart>
                             <telerikChart:RadCartesianChart.HorizontalAxis>
-                                <telerikChart:CategoricalAxis LineColor="White" LabelTextColor="White" MajorTickBackgroundColor="White" />
+                                <telerikChart:CategoricalAxis />
                             </telerikChart:RadCartesianChart.HorizontalAxis>
                             <telerikChart:RadCartesianChart.VerticalAxis>
-                                <telerikChart:NumericalAxis LineColor="White" LabelTextColor="White" MajorTickBackgroundColor="White" />
+                                <telerikChart:NumericalAxis />
                             </telerikChart:RadCartesianChart.VerticalAxis>
                             <telerikChart:RadCartesianChart.Series>
                                 <telerikChart:BarSeries CategoryBinding="Label" ValueBinding="Value" ItemsSource="{Binding ChartData}" />
