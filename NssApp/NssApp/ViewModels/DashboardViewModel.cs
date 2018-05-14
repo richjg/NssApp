@@ -89,29 +89,33 @@ namespace NssApp.ViewModels
                     ProtectedTile = new Tile { Color = "#bdcc2a", Title = "Protected", Text = GetTrafficLightValue(trafficLightCounts.GreenCount) };
                 }
 
-                IsUserMsp = (await nssRestApiService.GetCurrentUserInfo()).IsMsp;
+                IsUserMsp = (await nssRestApiService.GetCurrentUserInfo())?.IsMsp ?? false;
 
                 if (IsUserMsp)
                 {
                     var systemUtilisationMonths = await nssRestApiService.GetSystemUtilisationMonths().ResolveData(this._CurrentPage);
 
-                    var tile = new Tile
+                    if (systemUtilisationMonths != null)
                     {
-                        Color = "#76b0bd",
-                        Title = "Consumed Capacity",
-                        Text = "0"
-                    };
-                    var latest = systemUtilisationMonths.OrderByDescending(m => m.Date).FirstOrDefault();
-                    if (latest != null)
-                    {
+
+                        var tile = new Tile
+                        {
+                            Color = "#76b0bd",
+                            Title = "Consumed Capacity",
+                            Text = "0"
+                        };
+                        var latest = systemUtilisationMonths.OrderByDescending(m => m.Date).FirstOrDefault();
+                        if (latest != null)
+                        {
+                            //TODO: Decide if we should use EndTotalImageSizeBytes or EndTotalTransferredSizeBytes based on integration setting 'Use Data Transferred values'
+                            tile.Text = $"{ByteSize.FromBytes(latest.EndTotalTransferredSizeBytes).LargestWholeNumberValue:0} {ByteSize.FromBytes(latest.EndTotalTransferredSizeBytes).LargestWholeNumberSymbol}";
+                        }
+
+                        ConsumedCapacityTile = tile;
+
                         //TODO: Decide if we should use EndTotalImageSizeBytes or EndTotalTransferredSizeBytes based on integration setting 'Use Data Transferred values'
-                        tile.Text = $"{ByteSize.FromBytes(latest.EndTotalTransferredSizeBytes).LargestWholeNumberValue:0} {ByteSize.FromBytes(latest.EndTotalTransferredSizeBytes).LargestWholeNumberSymbol}";
+                        ChartData = systemUtilisationMonths.OrderByDescending(m => m.Date).Take(6).Select(m => new RestDataPoint { DateTime = m.Date, Value = m.NewTransferredSizeBytes }).ToList().AddMonthlyDataPointsAndOrder(6);
                     }
-
-                    ConsumedCapacityTile = tile;
-
-                    //TODO: Decide if we should use EndTotalImageSizeBytes or EndTotalTransferredSizeBytes based on integration setting 'Use Data Transferred values'
-                    ChartData = systemUtilisationMonths.OrderByDescending(m => m.Date).Take(6).Select(m => new RestDataPoint { DateTime = m.Date, Value = m.NewTransferredSizeBytes }).ToList().AddMonthlyDataPointsAndOrder(6);
                 }
             }
             finally

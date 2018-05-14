@@ -159,7 +159,7 @@ namespace NssApp.RestApi
             }
             catch (Exception e)
             {
-                response = new HttpResponseMessage { ReasonPhrase = e.Message };
+                response = new HttpResponseMessage { StatusCode = System.Net.HttpStatusCode.ServiceUnavailable, ReasonPhrase = e.Message };
             }
 
             return response;
@@ -167,30 +167,37 @@ namespace NssApp.RestApi
 
         public async Task<bool> TryAuthReAuthenticate()
         {
-            var loginSettings = await this.GetLoginSettings();
-
-            if(loginSettings == null)
+            try
             {
-                return false;
-            }
+                var loginSettings = await this.GetLoginSettings();
 
-            var client = await this.GetRestClient();
+                if (loginSettings == null)
+                {
+                    return false;
+                }
 
-            //Special case here, does not go through the Send methods
-            var result = await client.PostAsync("auth/token", new FormUrlEncodedContent(new[]
-            {
+                var client = await this.GetRestClient();
+
+                //Special case here, does not go through the Send methods
+                var result = await client.PostAsync("auth/token", new FormUrlEncodedContent(new[]
+                {
                     new KeyValuePair<string, string>("grant_type", "password"),
                     new KeyValuePair<string, string>("username", loginSettings.Username),
                     new KeyValuePair<string, string>("password", loginSettings.Password)
             }));
 
-            if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                if (result.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    var loginResponse = await result.Content.FromJsonAsync<LoginResponse>();
+                    AuthenticationFailed = false;
+                    this.userCredentialStore.UpdateAccessToken(loginResponse.AccessToken);
+                    this._loginSettings = null;
+                    return true;
+                }
+            }
+            catch
             {
-                var loginResponse = await result.Content.FromJsonAsync<LoginResponse>();
-                AuthenticationFailed = false;
-                this.userCredentialStore.UpdateAccessToken(loginResponse.AccessToken);
-                this._loginSettings = null;
-                return true;
+
             }
 
             return false;

@@ -66,19 +66,29 @@ namespace NssApp.ViewModels
         private async void PageOnAppearing(object sender, EventArgs e)
         {
             this.MachineProtection = await this.nssRestApiService.GetMachineProtection(this.Machine.Id).ResolveData(this._CurrentPage);
-            this.HasProtectionLevels = this.MachineProtection.ProtectedLevels.Any();
-            this.AvailableProtectionLevels = await this.nssRestApiService.GetAvailableMachineProtectionLevels(this.Machine.Id).ResolveData(this._CurrentPage);
-            this.ProtectionStatus = this.GetProtectionStatus(this.MachineProtection);
-            this.LastSuccessfulBackupStatus = this.GetLastSuccessfulBackupStatus(await this.nssRestApiService.GetMachineImages(this.Machine.Id).ResolveData(this._CurrentPage));
+            if (this.MachineProtection != null)
+            {
+                this.HasProtectionLevels = this.MachineProtection.ProtectedLevels.Any();
+                this.AvailableProtectionLevels = await this.nssRestApiService.GetAvailableMachineProtectionLevels(this.Machine.Id).ResolveData(this._CurrentPage);
+                this.ProtectionStatus = this.GetProtectionStatus(this.MachineProtection);
+                var machineImages = await this.nssRestApiService.GetMachineImages(this.Machine.Id).ResolveData(this._CurrentPage);
+                if (machineImages != null)
+                {
+                    this.LastSuccessfulBackupStatus = this.GetLastSuccessfulBackupStatus(machineImages);
+                }
 
-            var loggedInUser = await this.nssRestApiService.GetCurrentUserInfo();
-            if (loggedInUser.IsMsp || loggedInUser.IsTenantAdmin)
-            {
-                this.ConsumedCapacity = this.GetConsumedCapacity(await this.nssRestApiService.GetMachineUtilisationMonths(this.Machine.Id).ResolveData(this._CurrentPage));
-            }
-            else
-            {
-                this.ConsumedCapacity = this.GetConsumedCapacity(new List<MachineUtilisationMonth>());
+                var loggedInUser = await this.nssRestApiService.GetCurrentUserInfo();
+                if (loggedInUser != null)
+                {
+                    if (loggedInUser.IsMsp || loggedInUser.IsTenantAdmin)
+                    {
+                        this.ConsumedCapacity = this.GetConsumedCapacity(await this.nssRestApiService.GetMachineUtilisationMonths(this.Machine.Id).ResolveData(this._CurrentPage));
+                    }
+                    else
+                    {
+                        this.ConsumedCapacity = this.GetConsumedCapacity(new List<MachineUtilisationMonth>());
+                    }
+                }
             }
         }
 
