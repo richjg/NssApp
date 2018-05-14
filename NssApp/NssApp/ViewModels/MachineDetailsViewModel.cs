@@ -63,32 +63,58 @@ namespace NssApp.ViewModels
 
         public ICommand ShowProtectionOptionsCommand { get => new Command(async () => await ShowProtectionOptions()); }
 
-        private async void PageOnAppearing(object sender, EventArgs e)
-        {
-            this.MachineProtection = await this.nssRestApiService.GetMachineProtection(this.Machine.Id).ResolveData(this._CurrentPage);
-            if (this.MachineProtection != null)
-            {
-                this.HasProtectionLevels = this.MachineProtection.ProtectedLevels.Any();
-                this.AvailableProtectionLevels = await this.nssRestApiService.GetAvailableMachineProtectionLevels(this.Machine.Id).ResolveData(this._CurrentPage);
-                this.ProtectionStatus = this.GetProtectionStatus(this.MachineProtection);
-                var machineImages = await this.nssRestApiService.GetMachineImages(this.Machine.Id).ResolveData(this._CurrentPage);
-                if (machineImages != null)
-                {
-                    this.LastSuccessfulBackupStatus = this.GetLastSuccessfulBackupStatus(machineImages);
-                }
+        public bool _isRefreshing;
+        public bool IsRefreshing { get => this._isRefreshing; set => this.SetPropertyValue(ref _isRefreshing, value, nameof(IsRefreshing)); }
 
-                var loggedInUser = await this.nssRestApiService.GetCurrentUserInfo();
-                if (loggedInUser != null)
+        public ICommand PullToRefreshCommand
+        {
+            get
+            {
+                return new Command(async () =>
                 {
-                    if (loggedInUser.IsMsp || loggedInUser.IsTenantAdmin)
+                    await LoadDetails();
+                });
+            }
+        }
+
+        private async void PageOnAppearing(object sender, EventArgs e) => await LoadDetails();
+
+        private async Task LoadDetails()
+        {
+            try
+            {
+                this.IsRefreshing = true;
+
+
+                this.MachineProtection = await this.nssRestApiService.GetMachineProtection(this.Machine.Id).ResolveData(this._CurrentPage);
+                if (this.MachineProtection != null)
+                {
+                    this.HasProtectionLevels = this.MachineProtection.ProtectedLevels.Any();
+                    this.AvailableProtectionLevels = await this.nssRestApiService.GetAvailableMachineProtectionLevels(this.Machine.Id).ResolveData(this._CurrentPage);
+                    this.ProtectionStatus = this.GetProtectionStatus(this.MachineProtection);
+                    var machineImages = await this.nssRestApiService.GetMachineImages(this.Machine.Id).ResolveData(this._CurrentPage);
+                    if (machineImages != null)
                     {
-                        this.ConsumedCapacity = this.GetConsumedCapacity(await this.nssRestApiService.GetMachineUtilisationMonths(this.Machine.Id).ResolveData(this._CurrentPage));
+                        this.LastSuccessfulBackupStatus = this.GetLastSuccessfulBackupStatus(machineImages);
                     }
-                    else
+
+                    var loggedInUser = await this.nssRestApiService.GetCurrentUserInfo();
+                    if (loggedInUser != null)
                     {
-                        this.ConsumedCapacity = this.GetConsumedCapacity(new List<MachineUtilisationMonth>());
+                        if (loggedInUser.IsMsp || loggedInUser.IsTenantAdmin)
+                        {
+                            this.ConsumedCapacity = this.GetConsumedCapacity(await this.nssRestApiService.GetMachineUtilisationMonths(this.Machine.Id).ResolveData(this._CurrentPage));
+                        }
+                        else
+                        {
+                            this.ConsumedCapacity = this.GetConsumedCapacity(new List<MachineUtilisationMonth>());
+                        }
                     }
                 }
+            }
+            finally
+            {
+                this.IsRefreshing = false;
             }
         }
 

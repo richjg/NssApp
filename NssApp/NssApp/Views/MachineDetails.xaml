@@ -5,91 +5,95 @@
              x:Class="NssApp.MachineDetails"
              xmlns:mvvm="clr-namespace:NssApp.RestApi;assembly=NssApp">
     <ContentPage.Content>
-        <StackLayout Padding="10">
-            <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
-                <Label FontSize="Large" Text="{Binding Machine.DisplayName}" LineBreakMode="TailTruncation" />
-            </StackLayout>
-            <StackLayout>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                        <ColumnDefinition Width="*"></ColumnDefinition>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <StackLayout Grid.Row="0" Grid.Column="0" BackgroundColor="{Binding ConsumedCapacity.Color}" Padding="10">
-                        <Label FontSize="Micro" TextColor="White" HeightRequest="30" Text="{Binding ConsumedCapacity.Title}" />
-                        <Label FontSize="Large" TextColor="White" HeightRequest="100" Text="{Binding ConsumedCapacity.Text}" VerticalTextAlignment="Start" />
+        <ListView IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding PullToRefreshCommand}" SeparatorVisibility="None">
+            <ListView.Header>
+                <StackLayout Padding="10">
+                    <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
+                        <Label FontSize="Large" Text="{Binding Machine.DisplayName}" LineBreakMode="TailTruncation" />
                     </StackLayout>
-                    <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="{Binding ProtectionStatus.Color}" Padding="10">
-                        <Label FontSize="Micro" TextColor="White" HeightRequest="40" Text="{Binding ProtectionStatus.Title}" />
-                        <Label FontSize="Micro" TextColor="White" HeightRequest="100" Text="{Binding ProtectionStatus.Text}" VerticalTextAlignment="Start" />
+                    <StackLayout>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <StackLayout Grid.Row="0" Grid.Column="0" BackgroundColor="{Binding ConsumedCapacity.Color}" Padding="10">
+                                <Label FontSize="Micro" TextColor="White" HeightRequest="30" Text="{Binding ConsumedCapacity.Title}" />
+                                <Label FontSize="Large" TextColor="White" HeightRequest="100" Text="{Binding ConsumedCapacity.Text}" VerticalTextAlignment="Start" />
+                            </StackLayout>
+                            <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="{Binding ProtectionStatus.Color}" Padding="10">
+                                <Label FontSize="Micro" TextColor="White" HeightRequest="40" Text="{Binding ProtectionStatus.Title}" />
+                                <Label FontSize="Micro" TextColor="White" HeightRequest="100" Text="{Binding ProtectionStatus.Text}" VerticalTextAlignment="Start" />
+                            </StackLayout>
+                            <StackLayout Grid.Row="0" Grid.Column="2" BackgroundColor="{Binding LastSuccessfulBackupStatus.Color}" Padding="10">
+                                <Label FontSize="Micro" TextColor="White" HeightRequest="40" Text="{Binding LastSuccessfulBackupStatus.Title}" />
+                                <Label FontSize="Micro" TextColor="White" HeightRequest="100" Text="{Binding LastSuccessfulBackupStatus.Text}" VerticalTextAlignment="Start" />
+                            </StackLayout>
+                        </Grid>
                     </StackLayout>
-                    <StackLayout Grid.Row="0" Grid.Column="2" BackgroundColor="{Binding LastSuccessfulBackupStatus.Color}" Padding="10">
-                        <Label FontSize="Micro" TextColor="White" HeightRequest="40" Text="{Binding LastSuccessfulBackupStatus.Title}" />
-                        <Label FontSize="Micro" TextColor="White" HeightRequest="100" Text="{Binding LastSuccessfulBackupStatus.Text}" VerticalTextAlignment="Start" />
+                    <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
+                        <ListView ItemsSource="{Binding MachineProtection.ProtectedLevels}"  SeparatorVisibility="None">
+                            <ListView.Header>
+                                <Label FontSize="Medium" Text="Protection Level" IsVisible="{Binding HasProtectionLevels}" />
+                            </ListView.Header>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="30"></ColumnDefinition>
+                                                    <ColumnDefinition Width="70"></ColumnDefinition>
+                                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition></RowDefinition>
+                                                </Grid.RowDefinitions>
+                                                <StackLayout Grid.Row="0" Grid.Column="0" VerticalOptions="CenterAndExpand">
+                                                    <Label Text="&#xF14A;" TextColor="{Binding ProtectionLevel.Color}" FontSize="Large" VerticalTextAlignment="Center">
+                                                        <Label.FontFamily>
+                                                            <OnPlatform x:TypeArguments="x:String">
+                                                                <On Platform="iOS" Value="FontAwesome" />
+                                                                <On Platform="Android" Value="FontAwesome.otf#FontAwesome" />
+                                                                <On Platform="UWP, WinRT, WinPhone" Value="Assets/Fonts/FontAwesome.otf#FontAwesome" />
+                                                            </OnPlatform>
+                                                        </Label.FontFamily>
+                                                    </Label>
+                                                </StackLayout>
+                                                <StackLayout Grid.Row="0" Grid.Column="1" VerticalOptions="CenterAndExpand">
+                                                    <Label FontSize="Small" Text="{Binding EntityType}"  VerticalTextAlignment="Center" />
+                                                </StackLayout>
+                                                <StackLayout Grid.Row="0" Grid.Column="2" VerticalOptions="CenterAndExpand">
+                                                    <Label Text="{Binding ProtectionLevel.Description}" FontSize="Small" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                                                </StackLayout>
+                                            </Grid>
+                                        </StackLayout>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
                     </StackLayout>
-                </Grid>
-            </StackLayout>
-            <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
-                <ListView ItemsSource="{Binding MachineProtection.ProtectedLevels}"  SeparatorVisibility="None">
-                    <ListView.Header>
-                        <Label FontSize="Medium" Text="Protection Level" IsVisible="{Binding HasProtectionLevels}" />
-                    </ListView.Header>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <StackLayout Orientation="Horizontal">
-                                    <Grid>
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="30"></ColumnDefinition>
-                                            <ColumnDefinition Width="70"></ColumnDefinition>
-                                            <ColumnDefinition Width="*"></ColumnDefinition>
-                                        </Grid.ColumnDefinitions>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition></RowDefinition>
-                                        </Grid.RowDefinitions>
-                                        <StackLayout Grid.Row="0" Grid.Column="0" VerticalOptions="CenterAndExpand">
-                                            <Label Text="&#xF14A;" TextColor="{Binding ProtectionLevel.Color}" FontSize="Large" VerticalTextAlignment="Center">
-                                                <Label.FontFamily>
-                                                    <OnPlatform x:TypeArguments="x:String">
-                                                        <On Platform="iOS" Value="FontAwesome" />
-                                                        <On Platform="Android" Value="FontAwesome.otf#FontAwesome" />
-                                                        <On Platform="UWP, WinRT, WinPhone" Value="Assets/Fonts/FontAwesome.otf#FontAwesome" />
-                                                    </OnPlatform>
-                                                </Label.FontFamily>
-                                            </Label>
-                                        </StackLayout>
-                                        <StackLayout Grid.Row="0" Grid.Column="1" VerticalOptions="CenterAndExpand">
-                                            <Label FontSize="Small" Text="{Binding EntityType}"  VerticalTextAlignment="Center" />
-                                        </StackLayout>
-                                        <StackLayout Grid.Row="0" Grid.Column="2" VerticalOptions="CenterAndExpand">
-                                            <Label Text="{Binding ProtectionLevel.Description}" FontSize="Small" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
-                                        </StackLayout>
-                                    </Grid>
-                                </StackLayout>
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
-            </StackLayout>
-            <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="5">
-                <!-- bottom controls -->
-                <Label Text="&#xF013;" FontSize="Large" VerticalTextAlignment="Center">
-                    <Label.FontFamily>
-                        <OnPlatform x:TypeArguments="x:String">
-                            <On Platform="iOS" Value="FontAwesome" />
-                            <On Platform="Android" Value="FontAwesome.otf#FontAwesome" />
-                            <On Platform="UWP, WinRT, WinPhone" Value="Assets/Fonts/FontAwesome.otf#FontAwesome" />
-                        </OnPlatform>
-                    </Label.FontFamily>
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Command="{Binding ShowProtectionOptionsCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
-                    </Label.GestureRecognizers>
-                </Label>
-            </StackLayout>
-        </StackLayout>
+                    <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="5">
+                        <!-- bottom controls -->
+                        <Label Text="&#xF013;" FontSize="Large" VerticalTextAlignment="Center">
+                            <Label.FontFamily>
+                                <OnPlatform x:TypeArguments="x:String">
+                                    <On Platform="iOS" Value="FontAwesome" />
+                                    <On Platform="Android" Value="FontAwesome.otf#FontAwesome" />
+                                    <On Platform="UWP, WinRT, WinPhone" Value="Assets/Fonts/FontAwesome.otf#FontAwesome" />
+                                </OnPlatform>
+                            </Label.FontFamily>
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ShowProtectionOptionsCommand}" NumberOfTapsRequired="1"></TapGestureRecognizer>
+                            </Label.GestureRecognizers>
+                        </Label>
+                    </StackLayout>
+                </StackLayout>
+            </ListView.Header>
+        </ListView>
     </ContentPage.Content>
 </ContentPage>
