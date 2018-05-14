@@ -13,5 +13,7 @@ namespace System.Net.Http
             var stringContent = await httpContent.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<T>(stringContent);
         }
+
+        public static T FromJson<T>(this string json) => JsonConvert.DeserializeObject<T>(json);
     }
 }

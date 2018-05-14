@@ -66,6 +66,13 @@ namespace NssApp.ViewModels
         public bool _isRefreshing;
         public bool IsRefreshing { get => this._isRefreshing; set => this.SetPropertyValue(ref _isRefreshing, value, nameof(IsRefreshing)); }
 
+        public List<Activity<ProtectMachineActivityData>> _activities;
+        public List<Activity<ProtectMachineActivityData>> Activities { get => this._activities; set => this.SetPropertyValue(ref _activities, value, nameof(Activities)); }
+
+        private bool _hasActivity;
+        public bool HasActivity { get => this._hasActivity; set => this.SetPropertyValue(ref _hasActivity, value, nameof(HasActivity)); }
+
+
         public ICommand PullToRefreshCommand
         {
             get
@@ -109,6 +116,14 @@ namespace NssApp.ViewModels
                         {
                             this.ConsumedCapacity = this.GetConsumedCapacity(new List<MachineUtilisationMonth>());
                         }
+                    }
+
+                    var activities = await this.nssRestApiService.GetExecutingProtectMachineActivities(this.Machine.Id).ResolveData(this._CurrentPage);
+
+                    if (activities != null)
+                    {
+                        this.Activities = activities;
+                        this.HasActivity = this.Activities?.Any() ?? false;
                     }
                 }
             }

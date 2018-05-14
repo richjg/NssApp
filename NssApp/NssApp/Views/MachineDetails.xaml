@@ -35,7 +35,7 @@
                             </StackLayout>
                         </Grid>
                     </StackLayout>
-                    <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                         <ListView ItemsSource="{Binding MachineProtection.ProtectedLevels}"  SeparatorVisibility="None">
                             <ListView.Header>
                                 <Label FontSize="Medium" Text="Protection Level" IsVisible="{Binding HasProtectionLevels}" />
@@ -69,6 +69,48 @@
                                                 </StackLayout>
                                                 <StackLayout Grid.Row="0" Grid.Column="2" VerticalOptions="CenterAndExpand">
                                                     <Label Text="{Binding ProtectionLevel.Description}" FontSize="Small" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                                                </StackLayout>
+                                            </Grid>
+                                        </StackLayout>
+                                    </ViewCell>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackLayout>
+                    <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                        <ListView ItemsSource="{Binding Activities}"  SeparatorVisibility="None">
+                            <ListView.Header>
+                                <Label FontSize="Medium" Text="Activity" IsVisible="{Binding HasActivity}" />
+                            </ListView.Header>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <ViewCell>
+                                        <StackLayout Orientation="Horizontal">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="30"></ColumnDefinition>
+                                                    <ColumnDefinition Width="70"></ColumnDefinition>
+                                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition></RowDefinition>
+                                                </Grid.RowDefinitions>
+                                                <StackLayout Grid.Row="0" Grid.Column="0" VerticalOptions="CenterAndExpand">
+                                                    <Label Text="&#xF14A;" TextColor="{Binding ApiProtectionLevel.Color}" FontSize="Large" VerticalTextAlignment="Center">
+                                                        <Label.FontFamily>
+                                                            <OnPlatform x:TypeArguments="x:String">
+                                                                <On Platform="iOS" Value="FontAwesome" />
+                                                                <On Platform="Android" Value="FontAwesome.otf#FontAwesome" />
+                                                                <On Platform="UWP, WinRT, WinPhone" Value="Assets/Fonts/FontAwesome.otf#FontAwesome" />
+                                                            </OnPlatform>
+                                                        </Label.FontFamily>
+                                                    </Label>
+                                                </StackLayout>
+                                                <StackLayout Grid.Row="0" Grid.Column="1" VerticalOptions="CenterAndExpand">
+                                                    <Label FontSize="Small" Text="Protecting"  VerticalTextAlignment="Center" />
+                                                </StackLayout>
+                                                <StackLayout Grid.Row="0" Grid.Column="2" VerticalOptions="CenterAndExpand">
+                                                    <Label Text="{Binding ApiProtectionLevel.Description}" FontSize="Small" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
                                                 </StackLayout>
                                             </Grid>
                                         </StackLayout>

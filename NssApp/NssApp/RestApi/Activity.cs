@@ -21,4 +21,17 @@ namespace NssApp.RestApi
         public int? SupersededBy { get; set; }
         public IEnumerable<int> ContinuationIds { get; set; }
     }
+
+    public class Activity<T> : Activity
+    {
+        public T ActivityData { get; set; }
+    }
+
+    public class ProtectMachineActivityData
+    {
+        // "Data": "{\"MachineId\":5556,\"ActivityId\":158904,\"ProtectionLevelId\":240,\"RetentionLevel\":null,\"StorageLifecyclePolicyName\":null,\"RequestId\":null,\"IsBackupNow\":false,\"Paths\":[]}",
+        public int MachineId { get; set; }
+        public int ProtectionLevelId { get; set; }
+        public ApiProtectionLevel ApiProtectionLevel { get; set; }
+    }
 }

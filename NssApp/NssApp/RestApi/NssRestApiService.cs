@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -86,6 +87,34 @@ namespace NssApp.RestApi
         {
             return SendPost<Activity>($"v6/machines/{machineId}/protect", new { protectionLevelId });
         }
+
+        public async Task<RestResult<List<Activity<ProtectMachineActivityData>>>> GetExecutingProtectMachineActivities(int machineId)
+        {
+            var restResult = await SendGet<List<Activity<ProtectMachineActivityData>>>($"v6/activities?$filter=Type eq 'NetBackupSelfService.Tasks.ProtectMachineTask' and EntityType eq 'Machine' and EntityKey eq {machineId} and (Status eq 'Pending' or Status eq 'Queued' or Status eq 'Running')");
+            if(restResult.HasResult)
+            {
+                var restResultApiProtectionLevels = await this.GetAvailableMachineProtectionLevels(machineId);
+                if(restResultApiProtectionLevels.HasResult == false)
+                {
+                    return new List<Activity<ProtectMachineActivityData>>();
+                }
+
+                var apiProtectionLevels = restResultApiProtectionLevels.Result;
+
+                foreach (var item in restResult.Result)
+                {
+                    item.ActivityData = item.Data.FromJson<ProtectMachineActivityData>();
+                    if (item.ActivityData != null)
+                    {
+                        item.ActivityData.ApiProtectionLevel = apiProtectionLevels.FirstOrDefault(l => l.Id == item.ActivityData.ProtectionLevelId);
+                    }
+                }
+            }
+
+            return restResult;
+        }
+
+
 
         private Task<HttpResponseMessage> SendGet(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, url));
         private Task<HttpResponseMessage> SendPost(string url, object jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject) ?? string.Empty, System.Text.Encoding.UTF8, "application/json") });
