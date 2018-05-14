@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" ios:Page.UseSafeArea="true"
+            xmlns:local="clr-namespace:NssApp;assembly=NssApp"
+            x:Class="NssApp.Tabs">
+    <local:DashBoard Title="Dashboard" />
+    <NavigationPage Title="Machines" NavigationPage.HasNavigationBar="False">
+        <x:Arguments>
+            <local:Machines Title="Machines" NavigationPage.HasNavigationBar="False" />
+        </x:Arguments>
+    </NavigationPage>
+    <local:More Title="More" />
+</TabbedPage>

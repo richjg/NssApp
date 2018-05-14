@@ -1,12 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" ios:Page.UseSafeArea="true"
              x:Class="NssApp.MachineDetails"
              xmlns:mvvm="clr-namespace:NssApp.RestApi;assembly=NssApp">
     <ContentPage.Content>
         <StackLayout Padding="10">
             <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
-                <Label FontSize="30" Text="{Binding Machine.DisplayName}" LineBreakMode="TailTruncation" />
+                <Label FontSize="Large" Text="{Binding Machine.DisplayName}" LineBreakMode="TailTruncation" />
             </StackLayout>
             <StackLayout>
                 <Grid>
@@ -19,48 +20,64 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <StackLayout Grid.Row="0" Grid.Column="0" BackgroundColor="{Binding ConsumedCapacity.Color}" Padding="10">
-                        <Label FontSize="15" TextColor="White" HeightRequest="30" Text="{Binding ConsumedCapacity.Title}" />
-                        <Label FontSize="45" TextColor="White" HeightRequest="100" Text="{Binding ConsumedCapacity.Text}" VerticalTextAlignment="Start" />
+                        <Label FontSize="Micro" TextColor="White" HeightRequest="30" Text="{Binding ConsumedCapacity.Title}" />
+                        <Label FontSize="Large" TextColor="White" HeightRequest="100" Text="{Binding ConsumedCapacity.Text}" VerticalTextAlignment="Start" />
                     </StackLayout>
                     <StackLayout Grid.Row="0" Grid.Column="1" BackgroundColor="{Binding ProtectionStatus.Color}" Padding="10">
-                        <Label FontSize="15" TextColor="White" HeightRequest="40" Text="{Binding ProtectionStatus.Title}" />
-                        <Label FontSize="12" TextColor="White" HeightRequest="100" Text="{Binding ProtectionStatus.Text}" VerticalTextAlignment="Start" />
+                        <Label FontSize="Micro" TextColor="White" HeightRequest="40" Text="{Binding ProtectionStatus.Title}" />
+                        <Label FontSize="Micro" TextColor="White" HeightRequest="100" Text="{Binding ProtectionStatus.Text}" VerticalTextAlignment="Start" />
                     </StackLayout>
                     <StackLayout Grid.Row="0" Grid.Column="2" BackgroundColor="{Binding LastSuccessfulBackupStatus.Color}" Padding="10">
-                        <Label FontSize="15" TextColor="White" HeightRequest="40" Text="{Binding LastSuccessfulBackupStatus.Title}" />
-                        <Label FontSize="12" TextColor="White" HeightRequest="100" Text="{Binding LastSuccessfulBackupStatus.Text}" VerticalTextAlignment="Start" />
+                        <Label FontSize="Micro" TextColor="White" HeightRequest="40" Text="{Binding LastSuccessfulBackupStatus.Title}" />
+                        <Label FontSize="Micro" TextColor="White" HeightRequest="100" Text="{Binding LastSuccessfulBackupStatus.Text}" VerticalTextAlignment="Start" />
                     </StackLayout>
                 </Grid>
             </StackLayout>
             <StackLayout Orientation="Horizontal" VerticalOptions="StartAndExpand">
-                <ListView ItemsSource="{Binding MachineProtection.ProtectedLevels}">
+                <ListView ItemsSource="{Binding MachineProtection.ProtectedLevels}"  SeparatorVisibility="None">
                     <ListView.Header>
-                        <Label FontSize="20" Text="Protection Level" IsVisible="{Binding HasProtectionLevels}" />
+                        <Label FontSize="Medium" Text="Protection Level" IsVisible="{Binding HasProtectionLevels}" />
                     </ListView.Header>
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <StackLayout Orientation="Horizontal">
-                                    <Label Text="&#xF14A;" TextColor="{Binding ProtectionLevel.Color}" FontSize="30" VerticalTextAlignment="Center">
-                                        <Label.FontFamily>
-                                            <OnPlatform x:TypeArguments="x:String">
-                                                <On Platform="iOS" Value="FontAwesome" />
-                                                <On Platform="Android" Value="FontAwesome.otf#FontAwesome" />
-                                                <On Platform="UWP, WinRT, WinPhone" Value="Assets/Fonts/FontAwesome.otf#FontAwesome" />
-                                            </OnPlatform>
-                                        </Label.FontFamily>
-                                    </Label>
-                                    <Label FontSize="15" Text="{Binding EntityType}"  VerticalTextAlignment="Center" />
-                                    <Label Text="{Binding ProtectionLevel.Description}" FontSize="15" VerticalTextAlignment="Center" HorizontalOptions="EndAndExpand" LineBreakMode="TailTruncation" />
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="30"></ColumnDefinition>
+                                            <ColumnDefinition Width="70"></ColumnDefinition>
+                                            <ColumnDefinition Width="*"></ColumnDefinition>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition></RowDefinition>
+                                        </Grid.RowDefinitions>
+                                        <StackLayout Grid.Row="0" Grid.Column="0" VerticalOptions="CenterAndExpand">
+                                            <Label Text="&#xF14A;" TextColor="{Binding ProtectionLevel.Color}" FontSize="Large" VerticalTextAlignment="Center">
+                                                <Label.FontFamily>
+                                                    <OnPlatform x:TypeArguments="x:String">
+                                                        <On Platform="iOS" Value="FontAwesome" />
+                                                        <On Platform="Android" Value="FontAwesome.otf#FontAwesome" />
+                                                        <On Platform="UWP, WinRT, WinPhone" Value="Assets/Fonts/FontAwesome.otf#FontAwesome" />
+                                                    </OnPlatform>
+                                                </Label.FontFamily>
+                                            </Label>
+                                        </StackLayout>
+                                        <StackLayout Grid.Row="0" Grid.Column="1" VerticalOptions="CenterAndExpand">
+                                            <Label FontSize="Small" Text="{Binding EntityType}"  VerticalTextAlignment="Center" />
+                                        </StackLayout>
+                                        <StackLayout Grid.Row="0" Grid.Column="2" VerticalOptions="CenterAndExpand">
+                                            <Label Text="{Binding ProtectionLevel.Description}" FontSize="Small" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+                                        </StackLayout>
+                                    </Grid>
                                 </StackLayout>
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
             </StackLayout>
-            <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="15">
+            <StackLayout Orientation="Horizontal" VerticalOptions="End" Padding="5">
                 <!-- bottom controls -->
-                <Label Text="&#xF013;" FontSize="18" VerticalTextAlignment="Center">
+                <Label Text="&#xF013;" FontSize="Large" VerticalTextAlignment="Center">
                     <Label.FontFamily>
                         <OnPlatform x:TypeArguments="x:String">
                             <On Platform="iOS" Value="FontAwesome" />

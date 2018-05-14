@@ -15,7 +15,7 @@ namespace NssApp
         public App ()
 		{
 			InitializeComponent();
-            MainPage = new Master();
+            MainPage = new SplashScreen();
         }
 
 		protected override void OnStart ()

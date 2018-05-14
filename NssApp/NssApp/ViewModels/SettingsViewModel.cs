@@ -49,8 +49,7 @@ namespace NssApp.ViewModels
 
         private string _loginFailedMessage;
         public string LoginFaileMessage { get => this._loginFailedMessage; set => this.SetPropertyValue(ref _loginFailedMessage, value, nameof(LoginFaileMessage)); }
-
-        public ICommand CancelEditSettingsCommand { get => new Command(async () => await CancelEditSettings()); }
+        
         public ICommand DoneEditSettingsCommand { get => new Command(async () => await DoneEditingSettings()); }
 
         private async void PageOnAppearing(object sender, EventArgs e)
@@ -75,20 +74,13 @@ namespace NssApp.ViewModels
             }
         }
 
-        private async Task CancelEditSettings()
-        {
-            this._Navigation.InsertPageBefore(new DashBoard(), this._CurrentPage);
-            await this._Navigation.PopAsync();
-        }
-
         private async Task DoneEditingSettings()
         {
             this.LoginFaileMessage = string.Empty;
             var signedInOK = await this._loggedInUserService.SignIn(this.Url, this.Username, this.Password);
             if(signedInOK)
             {
-                this._Navigation.InsertPageBefore(new DashBoard(), this._CurrentPage);
-                await this._Navigation.PopAsync();
+                Application.Current.MainPage = new Tabs();
             }
             else
             {

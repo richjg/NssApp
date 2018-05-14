@@ -2,20 +2,13 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" ios:Page.UseSafeArea="true"
-             x:Class="NssApp.Settings"
+             x:Class="NssApp.SplashScreen"
              BackgroundColor="#B1171F">
     <ContentPage.Content>
         <StackLayout HorizontalOptions="CenterAndExpand" Margin="0, 50, 0, 0">
             <Label HorizontalOptions="CenterAndExpand" Text="Welcome to" FontSize="Micro" TextColor="White" />
             <Label HorizontalOptions="CenterAndExpand" Text="NetBackup Self Service" FontSize="Large" TextColor="White" />
-
-            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="FillAndExpand">
-                <Entry Placeholder="Url" Text="{Binding Url, Mode=TwoWay}" />
-                <Entry Placeholder="Username" Text="{Binding Username, Mode=TwoWay}" />
-                <Entry Placeholder="Password" IsPassword="true" Text="{Binding Password, Mode=TwoWay}" />
-                <Button Text="Login" Command="{Binding DoneEditSettingsCommand}" />
-                <Label Text="{Binding LoginFaileMessage}" TextColor="White" />
-            </StackLayout>
+            <ActivityIndicator HorizontalOptions="CenterAndExpand" Color="White" IsRunning="True" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
