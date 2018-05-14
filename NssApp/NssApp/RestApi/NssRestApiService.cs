@@ -140,18 +140,26 @@ namespace NssApp.RestApi
                 return new HttpResponseMessage(System.Net.HttpStatusCode.Unauthorized);
             }
 
-            var response = await client.SendAsync(getRequest());
-            if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+            HttpResponseMessage response;
+            try
             {
-                if ((await this.TryAuthReAuthenticate()))
+                response = await client.SendAsync(getRequest());
+                if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    client = await this.GetRestClient();
-                    response = await client.SendAsync(getRequest());
+                    if ((await this.TryAuthReAuthenticate()))
+                    {
+                        client = await this.GetRestClient();
+                        response = await client.SendAsync(getRequest());
+                    }
+                    else
+                    {
+                        AuthenticationFailed = true;
+                    }
                 }
-                else
-                {
-                    AuthenticationFailed = true;
-                }
+            }
+            catch (Exception e)
+            {
+                response = new HttpResponseMessage { ReasonPhrase = e.Message };
             }
 
             return response;

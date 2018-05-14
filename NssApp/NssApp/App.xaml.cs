@@ -35,5 +35,11 @@ namespace NssApp
         {
             return () => p.DisplayAlert("Connecting", "Hmm having trouble connecting to the server. Goto setting's to take a look", "Ok");
         }
-	}
+
+        public static Func<Task> GetHttpErrorMethod(Page p)
+        {
+            return () => p.DisplayAlert("Connecting", "Hmm having trouble connecting to the server.", "Ok");
+        }
+
+    }
 }

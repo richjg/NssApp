@@ -47,7 +47,7 @@ namespace NssApp.RestApi
             }
         }
 
-        public static Task<T> ResolveData<T>(this Task<RestResult<T>> restResultTask, Page page) => restResultTask.Match(valid: r => r, errors: (e) => Task.CompletedTask, loginRequired: App.GetLoginFailedMethod(page));
+        public static Task<T> ResolveData<T>(this Task<RestResult<T>> restResultTask, Page page) => restResultTask.Match(valid: r => r, errors: (e) => App.GetHttpErrorMethod(page)(), loginRequired: App.GetLoginFailedMethod(page));
         public static Task<T> ResolveData<T>(this Task<RestResult<T>> restResultTask, Page page, Func<RestResultError, Task> errors) => restResultTask.Match(valid: r => r, errors: (e) => errors(e), loginRequired: App.GetLoginFailedMethod(page));
     }
 }
