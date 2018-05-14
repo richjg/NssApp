@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" ios:Page.UseSafeArea="true"
              xmlns:telerikChart="clr-namespace:Telerik.XamarinForms.Chart;assembly=Telerik.XamarinForms.Chart"
-             xmlns:internals="http://xamarin.com/schemas/2014/forms"
              x:Class="NssApp.DashBoard">
     <ContentPage.Content>
         <ListView IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding PullToRefreshCommand}" SeparatorVisibility="None">
@@ -40,11 +39,10 @@
                                 <telerikChart:CategoricalAxis />
                             </telerikChart:RadCartesianChart.HorizontalAxis>
                             <telerikChart:RadCartesianChart.VerticalAxis>
-                                <telerikChart:NumericalAxis>
-                                </telerikChart:NumericalAxis>
+                                <telerikChart:NumericalAxis />
                             </telerikChart:RadCartesianChart.VerticalAxis>
                             <telerikChart:RadCartesianChart.Series>
-                                <telerikChart:BarSeries CategoryBinding="Label" ValueBinding="Value" ItemsSource="{Binding ChartData}"  />
+                                <telerikChart:BarSeries CategoryBinding="Label" ValueBinding="Value" ItemsSource="{Binding ChartData}" />
                             </telerikChart:RadCartesianChart.Series>
                         </telerikChart:RadCartesianChart>
                     </StackLayout>
