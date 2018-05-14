@@ -22,14 +22,14 @@ namespace NssApp.RestApi
 
             if(httpClient == null)
             {
-                httpClient = new HttpClient
+                httpClient = new HttpClient(new RetryHandler(new HttpClientHandler()))
                 {
                     BaseAddress = new Uri(loginSettings.BaseUrl)
                 };
             }
             else if(httpClient.BaseAddress.OriginalString != loginSettings.BaseUrl)
             {
-                httpClient = new HttpClient
+                httpClient = new HttpClient(new RetryHandler(new HttpClientHandler()))
                 {
                     BaseAddress = new Uri(loginSettings.BaseUrl)
                 };
