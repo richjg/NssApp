@@ -1,5 +1,7 @@
-﻿using System.Linq;
-using Xamarin.Auth;
+﻿using System;
+using System.Linq;
+using Newtonsoft.Json;
+using Xamarin.Essentials;
 
 namespace NssApp.RestApi
 {
@@ -7,21 +9,20 @@ namespace NssApp.RestApi
     {
         private const string ServiceId = "FO.NSS.APP.V4";
         private static LoginSettings CurrentLoginSettings;
-
-        public UserCredentialStore()
-        {
-        }
-
-        public bool HasCredentials() => (AccountStore.Create().FindAccountsForService(ServiceId)).FirstOrDefault() != null;
-
+        
         public LoginSettings GetCredentials()
         {
-            if(CurrentLoginSettings != null)
+            if (CurrentLoginSettings != null)
             {
                 return CurrentLoginSettings;
             }
 
-            var account = (AccountStore.Create().FindAccountsForService(ServiceId)).FirstOrDefault();
+            var storedCredentials = GetStoredCredentials();
+
+            if (storedCredentials == null)
+                return null;
+
+            var account = JsonConvert.DeserializeObject<LoginSettings>(storedCredentials);
             if (account == null)
             {
                 return null;
@@ -29,59 +30,19 @@ namespace NssApp.RestApi
 
             return CurrentLoginSettings = new LoginSettings
             {
-                BaseUrl = account.Properties["baseurl"],
-                Password = account.Properties["password"],
-                AccessToken = account.Properties["accesstoken"],
+                BaseUrl = account.BaseUrl,
+                Password = account.Password,
+                AccessToken = account.AccessToken,
                 Username = account.Username
             };
         }
 
-        public void UpdateAccessToken(string accessToken)
-        {
-            var accountStore = AccountStore.Create();
-
-            var currentAccount = (accountStore.FindAccountsForService(ServiceId)).FirstOrDefault();
-            if (currentAccount == null)
-            {
-                return;
-            }
-            accountStore.Delete(currentAccount, ServiceId);
-
-            var newAccount = new Account
-            {
-                Username = currentAccount.Username
-            };
-            newAccount.Properties["password"] = currentAccount.Properties["password"];
-            newAccount.Properties["baseurl"] = currentAccount.Properties["baseurl"];
-            newAccount.Properties["accesstoken"] = accessToken;
-
-            if (CurrentLoginSettings != null)
-            {
-                CurrentLoginSettings.AccessToken = accessToken;
-            }
-
-            accountStore.Save(newAccount, ServiceId);
-        }
-
+        private string GetStoredCredentials() => SecureStorage.GetAsync(ServiceId).GetAwaiter().GetResult();
+        private void SetStoredCredentials(LoginSettings loginSettings) => SecureStorage.SetAsync(ServiceId, JsonConvert.SerializeObject(loginSettings));
+        
         public void SetCredentials(LoginSettings loginSettings)
         {
-            var accountStore = AccountStore.Create();
-
-            var account = (accountStore.FindAccountsForService(ServiceId)).FirstOrDefault();
-            if (account != null)
-            {
-                accountStore.Delete(account, ServiceId);
-            }
-            account = new Account
-            {
-                Username = loginSettings.Username
-            };
-            account.Properties["password"] = loginSettings.Password;
-            account.Properties["baseurl"] = loginSettings.BaseUrl;
-            account.Properties["accesstoken"] = loginSettings.AccessToken;
-
-            accountStore.Save(account, ServiceId);
-
+            SetStoredCredentials(loginSettings);
             CurrentLoginSettings = loginSettings;
         }
     }

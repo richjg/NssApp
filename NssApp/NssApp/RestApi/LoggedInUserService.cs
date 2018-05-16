@@ -22,12 +22,7 @@ namespace NssApp.RestApi
         {
             return Task.FromResult(this.userCredentialStore.GetCredentials());
         }
-
-        public void UpdateAccessToken(string accessToken)
-        {
-            this.userCredentialStore.UpdateAccessToken(accessToken);
-        }
-
+        
         public void SetCredentials(LoginSettings loginSettings)
         {
             this.userCredentialStore.SetCredentials(loginSettings);

@@ -218,8 +218,9 @@ namespace NssApp.RestApi
                 if (result.StatusCode == System.Net.HttpStatusCode.OK)
                 {
                     var loginResponse = await result.Content.FromJsonAsync<LoginResponse>();
+                    loginSettings.AccessToken = loginResponse.AccessToken;
                     AuthenticationFailed = false;
-                    this.userCredentialStore.UpdateAccessToken(loginResponse.AccessToken);
+                    this.userCredentialStore.SetCredentials(loginSettings);
                     this._loginSettings = null;
                     return true;
                 }
