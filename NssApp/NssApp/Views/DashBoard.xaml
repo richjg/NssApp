@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" ios:Page.UseSafeArea="true"
+             xmlns:telerikChart="clr-namespace:Telerik.XamarinForms.Chart;assembly=Telerik.XamarinForms.Chart"
              x:Class="NssApp.DashBoard">
     <ContentPage.Content>
         <ListView IsPullToRefreshEnabled="True" IsRefreshing="{Binding IsRefreshing}" RefreshCommand="{Binding PullToRefreshCommand}" SeparatorVisibility="None">
@@ -31,6 +32,19 @@
                     <StackLayout Grid.Row="1" Grid.Column="0" BackgroundColor="{Binding ConsumedCapacityTile.Color}" Padding="10" IsVisible="{Binding IsUserMsp}">
                         <Label FontSize="Micro" TextColor="White" HeightRequest="50" Text="{Binding ConsumedCapacityTile.Title}" />
                         <Label FontSize="Large" TextColor="White" HeightRequest="90" Text="{Binding ConsumedCapacityTile.Text}" VerticalTextAlignment="Start" />
+                    </StackLayout>
+                    <StackLayout Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" BackgroundColor="#838B8F" Padding="2" IsVisible="{Binding IsUserMsp}">
+                        <telerikChart:RadCartesianChart HeightRequest="170">
+                            <telerikChart:RadCartesianChart.HorizontalAxis>
+                                <telerikChart:CategoricalAxis />
+                            </telerikChart:RadCartesianChart.HorizontalAxis>
+                            <telerikChart:RadCartesianChart.VerticalAxis>
+                                <telerikChart:NumericalAxis />
+                            </telerikChart:RadCartesianChart.VerticalAxis>
+                            <telerikChart:RadCartesianChart.Series>
+                                <telerikChart:BarSeries CategoryBinding="Label" ValueBinding="Value" ItemsSource="{Binding ChartData}" />
+                            </telerikChart:RadCartesianChart.Series>
+                        </telerikChart:RadCartesianChart>
                     </StackLayout>
                 </Grid>
             </ListView.Header>
