@@ -5,17 +5,18 @@ using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using NssRestClient.Services;
 using Xamarin.Forms;
 
 namespace NssApp.ViewModels
 {
     public class MoreViewModel
     {
-        private readonly LoggedInUserService _loggedInUserService;
+        private readonly LoginService loginService;
 
-        public MoreViewModel(LoggedInUserService loggedInUserService)
+        public MoreViewModel(LoginService loginService)
         {
-            this._loggedInUserService = loggedInUserService;
+            this.loginService = loginService;
         }
 
         public MoreViewModel Initialize(Page page)
@@ -23,20 +24,11 @@ namespace NssApp.ViewModels
             return this;
         }
         
-        public ICommand LogoutCommand { get => new Command(async () => await Logout()); }
+        public ICommand LogoutCommand => new Command(async () => await Logout());
 
         private async Task Logout()
         {
-            var x = await _loggedInUserService.TryGetLoggedInUserSettings();
-
-            _loggedInUserService.SetCredentials(new LoginSettings
-            {
-                BaseUrl = x.BaseUrl,
-                Username = "",
-                Password = "",
-                AccessToken = ""
-            });
-
+            await loginService.SignOutAsync();
             Application.Current.MainPage = new SplashScreen();
         }
     }

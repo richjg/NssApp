@@ -8,19 +8,22 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using NssRestClient.Dto;
+using NssRestClient.Services;
 using Xamarin.Forms;
 
 namespace NssApp.ViewModels
 {
     public class MachineViewModel : INotifyPropertyChanged
     {
+        private readonly MachineService machineService;
         public event PropertyChangedEventHandler PropertyChanged;
         private Page _CurrentPage;
         private INavigation _Navigation;
 
-        public MachineViewModel(NssRestApiService nssRestApiService)
+        public MachineViewModel(MachineService machineService)
         {
-            this.nssRestApiService = nssRestApiService;
+            this.machineService = machineService;
         }
 
         public MachineViewModel Initialize(Page page)
@@ -38,18 +41,16 @@ namespace NssApp.ViewModels
             t = value;
             OnPropertyChanged(name);
         }
-
-
+        
         private bool _isRefreshing = false;
-        private readonly NssRestApiService nssRestApiService;
         public bool IsRefreshing { get => this._isRefreshing; set => this.SetPropertyValue(ref _isRefreshing, value, nameof(IsRefreshing)); }
 
         private int CurrrentPageIndex { get; set; } = 1;
         private bool HasMoreItems { get; set; } = true;
 
-        public ObservableCollection<Machine> MachineCollection { get; set; } = new ObservableCollection<Machine>();
-        public ICommand LoadMoreCommand { get => new Command<Machine>(async (m) => await this.LoadMachines(), this.CanLoadMore); }
-        public ICommand MachineSelectedCommand { get => new Command<Machine>(async (m) => await this.MachineSelected(m)); }
+        public ObservableCollection<ApiMachine> MachineCollection { get; set; } = new ObservableCollection<ApiMachine>();
+        public ICommand LoadMoreCommand { get => new Command<ApiMachine>(async (m) => await this.LoadMachines(), this.CanLoadMore); }
+        public ICommand MachineSelectedCommand { get => new Command<ApiMachine>(async (m) => await this.MachineSelected(m)); }
 
         private string _searchText;
         public string SearchText
@@ -74,12 +75,10 @@ namespace NssApp.ViewModels
             await LoadMachines();
         }
 
-        private async Task MachineSelected(Machine machine)
+        private async Task MachineSelected(ApiMachine machine)
         {
             await this._Navigation.PushAsync(new MachineDetails(machine));
         }
-
-        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
 
         private async void ResetLoadMore()
         {
@@ -98,8 +97,8 @@ namespace NssApp.ViewModels
                     this.MachineCollection.Clear();
                 }
 
-                var machines = await this.nssRestApiService.GetComputers(this.CurrrentPageIndex, 50, this.SearchText).ResolveData(this._CurrentPage);
-                if (machines != null && machines.Count() > 0)
+                var machines = await this.machineService.GetComputers(this.CurrrentPageIndex, 50, this.SearchText).ResolveData(this._CurrentPage);
+                if (machines != null && machines.Any())
                 {
                     this.CurrrentPageIndex++;
                     foreach (var machine in machines)
@@ -124,7 +123,7 @@ namespace NssApp.ViewModels
             }
         }
 
-        private bool CanLoadMore(Machine machine)
+        private bool CanLoadMore(ApiMachine machine)
         {
             return IsRefreshing == false && HasMoreItems && MachineCollection.Count != 0 && MachineCollection.Last() == machine;
         }

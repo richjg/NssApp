@@ -1,29 +1,28 @@
-﻿using NssApp.RestApi;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using NssApp.RestApi;
+using NssRestClient;
+using NssRestClient.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace NssApp
 {
-	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class SplashScreen : ContentPage
-	{
-		public SplashScreen()
-		{
-			InitializeComponent();
-		}
+    [XamlCompilation(XamlCompilationOptions.Compile)]
+    public partial class SplashScreen : ContentPage
+    {
+        public SplashScreen()
+        {
+            InitializeComponent();
+        }
 
         protected override async void OnAppearing()
         {
             base.OnAppearing();
 
-            var nssRestService = new NssRestApiService(new UserCredentialStore(), new HttpClientFactory());
-            if (await nssRestService.TryAuthReAuthenticate() == true)
+            var result = await new SystemService(new RestClient(new NssHttpClientFactory(), new ClientCredentialStore())).GetLoggedInUser();
+            if (result.LoginRequired == false)
             {
                 Application.Current.MainPage = new Tabs();
             }

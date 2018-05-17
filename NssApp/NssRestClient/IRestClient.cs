@@ -11,5 +11,6 @@ namespace NssRestClient
         Task<RestResult<T>> PostJsonAsync<T>(string url, object postData);
         Task<RestResult<T>> PutJsonAsync<T>(string url, object postData);
         Task<RestResult<T>> DeleteAsync<T>(string url);
+        Task<LoginSettings> GetCurrentLoginSettings();
     }
 }

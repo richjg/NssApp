@@ -7,7 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ByteSizeLib;
+using NssRestClient.Dto;
+using NssRestClient.Services;
 using Xamarin.Forms;
+using ApiProtectionLevel = NssRestClient.Dto.ApiProtectionLevel;
 
 namespace NssApp.ViewModels
 {
@@ -16,14 +19,16 @@ namespace NssApp.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         private Page _CurrentPage;
         private INavigation _Navigation;
-        private readonly NssRestApiService nssRestApiService;
+        private readonly MachineService machineService;
+        private readonly SystemService systemService;
 
-        public MachineDetailsViewModel(NssRestApiService nssRestApiService)
+        public MachineDetailsViewModel(MachineService machineService, SystemService systemService)
         {
-            this.nssRestApiService = nssRestApiService;
+            this.machineService = machineService;
+            this.systemService = systemService;
         }
 
-        public MachineDetailsViewModel Initialize(Page page, Machine machine)
+        public MachineDetailsViewModel Initialize(Page page, ApiMachine machine)
         {
             this._machine = machine;
             this._CurrentPage = page;
@@ -43,13 +48,13 @@ namespace NssApp.ViewModels
         private bool _hasProtectionLevels;
         public bool HasProtectionLevels { get => this._hasProtectionLevels; set => this.SetPropertyValue(ref _hasProtectionLevels, value, nameof(HasProtectionLevels)); }
 
-        private Machine _machine;
-        public Machine Machine { get => this._machine; set => this.SetPropertyValue(ref _machine, value, nameof(Machine)); }
+        private ApiMachine _machine;
+        public ApiMachine Machine { get => this._machine; set => this.SetPropertyValue(ref _machine, value, nameof(Machine)); }
 
-        private MachineProtection _machineProtection;
-        public MachineProtection MachineProtection { get => this._machineProtection; set => this.SetPropertyValue(ref _machineProtection, value, nameof(MachineProtection)); }
+        private ApiProtected _machineProtection;
+        public ApiProtected MachineProtection { get => this._machineProtection; set => this.SetPropertyValue(ref _machineProtection, value, nameof(MachineProtection)); }
 
-        private List<ApiProtectionLevel> _availableProtectionLevels;
+        private List<NssRestClient.Dto.ApiProtectionLevel> _availableProtectionLevels;
         public List<ApiProtectionLevel> AvailableProtectionLevels { get => this._availableProtectionLevels; set => this.SetPropertyValue(ref _availableProtectionLevels, value, nameof(AvailableProtectionLevels)); }
 
         private Tile _protectionStatus;
@@ -65,14 +70,7 @@ namespace NssApp.ViewModels
 
         public bool _isRefreshing;
         public bool IsRefreshing { get => this._isRefreshing; set => this.SetPropertyValue(ref _isRefreshing, value, nameof(IsRefreshing)); }
-
-        public List<Activity<ProtectMachineActivityData>> _activities;
-        public List<Activity<ProtectMachineActivityData>> Activities { get => this._activities; set => this.SetPropertyValue(ref _activities, value, nameof(Activities)); }
-
-        private bool _hasActivity;
-        public bool HasActivity { get => this._hasActivity; set => this.SetPropertyValue(ref _hasActivity, value, nameof(HasActivity)); }
-
-
+        
         public ICommand PullToRefreshCommand
         {
             get
@@ -93,37 +91,29 @@ namespace NssApp.ViewModels
                 this.IsRefreshing = true;
 
 
-                this.MachineProtection = await this.nssRestApiService.GetMachineProtection(this.Machine.Id).ResolveData(this._CurrentPage);
+                this.MachineProtection = await this.machineService.GetMachineProtection(this.Machine.Id).ResolveData(this._CurrentPage);
                 if (this.MachineProtection != null)
                 {
                     this.HasProtectionLevels = this.MachineProtection.ProtectedLevels.Any();
-                    this.AvailableProtectionLevels = await this.nssRestApiService.GetAvailableMachineProtectionLevels(this.Machine.Id).ResolveData(this._CurrentPage);
+                    this.AvailableProtectionLevels = await this.machineService.GetAvailableMachineProtectionLevels(this.Machine.Id).ResolveData(this._CurrentPage);
                     this.ProtectionStatus = this.GetProtectionStatus(this.MachineProtection);
-                    var machineImages = await this.nssRestApiService.GetMachineImages(this.Machine.Id).ResolveData(this._CurrentPage);
+                    var machineImages = await this.machineService.GetMachineImages(this.Machine.Id).ResolveData(this._CurrentPage);
                     if (machineImages != null)
                     {
                         this.LastSuccessfulBackupStatus = this.GetLastSuccessfulBackupStatus(machineImages);
                     }
 
-                    var loggedInUser = await this.nssRestApiService.GetCurrentUserInfo();
+                    var loggedInUser = await this.systemService.GetLoggedInUser().ResolveData(this._CurrentPage);
                     if (loggedInUser != null)
                     {
                         if (loggedInUser.IsMsp || loggedInUser.IsTenantAdmin)
                         {
-                            this.ConsumedCapacity = this.GetConsumedCapacity(await this.nssRestApiService.GetMachineUtilisationMonths(this.Machine.Id).ResolveData(this._CurrentPage));
+                            this.ConsumedCapacity = this.GetConsumedCapacity(await this.machineService.GetMachineUtilisationMonths(this.Machine.Id).ResolveData(this._CurrentPage));
                         }
                         else
                         {
-                            this.ConsumedCapacity = this.GetConsumedCapacity(new List<MachineUtilisationMonth>());
+                            this.ConsumedCapacity = this.GetConsumedCapacity(new List<ApiMachineUtilisationMonth>());
                         }
-                    }
-
-                    var activities = await this.nssRestApiService.GetExecutingProtectMachineActivities(this.Machine.Id).ResolveData(this._CurrentPage);
-
-                    if (activities != null)
-                    {
-                        this.Activities = activities;
-                        this.HasActivity = this.Activities?.Any() ?? false;
                     }
                 }
             }
@@ -133,7 +123,7 @@ namespace NssApp.ViewModels
             }
         }
 
-        private Tile GetProtectionStatus(MachineProtection machineProtection)
+        private Tile GetProtectionStatus(ApiProtected machineProtection)
         {
             var tile = new Tile
             {
@@ -162,7 +152,7 @@ namespace NssApp.ViewModels
             return tile;
         }
 
-        private Tile GetLastSuccessfulBackupStatus(List<MachineImage> machineImages)
+        private Tile GetLastSuccessfulBackupStatus(List<ApiBackupImage> machineImages)
         {
             var tile = new Tile
             {
@@ -183,7 +173,7 @@ namespace NssApp.ViewModels
             return tile;
         }
 
-        private Tile GetConsumedCapacity(List<MachineUtilisationMonth> machineUtilisationMonths)
+        private Tile GetConsumedCapacity(List<ApiMachineUtilisationMonth> machineUtilisationMonths)
         {
             var tile = new Tile
             {
@@ -215,11 +205,7 @@ namespace NssApp.ViewModels
                     var selectedLevel = levels.FirstOrDefault(l => l.Name == selectedLevelName);
                     if(selectedLevel != null && selectedLevel.IsBackupNow == false)
                     {
-                        var activity = await this.nssRestApiService.ProtectMachine(this.Machine.Id, selectedLevel.Id).ResolveData(this._CurrentPage); // not showing errors, what errors would there be?
-                        if(activity != null)
-                        {
-
-                        }
+                        await this.machineService.ProtectMachine(this.Machine.Id, selectedLevel.Id).ResolveData(this._CurrentPage); // not showing errors, what errors would there be?
                     }
                 }
             }

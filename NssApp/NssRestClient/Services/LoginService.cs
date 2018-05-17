@@ -15,6 +15,10 @@ namespace NssRestClient.Services
         }
 
         public Task<bool> SignInAsync(string url, string username, string password) => this.restClient.SignIn(url, username, password);
-    }
 
+        public Task SignOutAsync() => this.restClient.SignOut();
+
+        public Task<LoginSettings> GetCurrentLoginSettings() => this.restClient.GetCurrentLoginSettings();
+
+    }
 }

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using NssRestClient;
+using NssRestClient.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -17,7 +18,7 @@ namespace NssApp
 		public More()
 		{
 			InitializeComponent();
-            this.BindingContext = new MoreViewModel(new LoggedInUserService(new NssRestApiService(new UserCredentialStore(), new HttpClientFactory()), new UserCredentialStore())).Initialize(this);
+            this.BindingContext = new MoreViewModel(new LoginService(new RestClient(new NssHttpClientFactory(), new ClientCredentialStore()))).Initialize(this);
         }
 	}
 }

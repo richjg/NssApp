@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using NssRestClient.Services;
 using Xamarin.Forms;
 
 namespace NssApp.ViewModels
@@ -14,12 +15,12 @@ namespace NssApp.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         private Page _CurrentPage;
         private INavigation _Navigation;
-        private readonly LoggedInUserService _loggedInUserService;
+        private readonly LoginService _loginService;
 
 
-        public SettingsViewModel(LoggedInUserService loggedInUserService)
+        public SettingsViewModel(LoginService loggedInUserService)
         {
-            this._loggedInUserService = loggedInUserService;
+            this._loginService = loggedInUserService;
         }
 
         public SettingsViewModel Initialize(Page page)
@@ -56,12 +57,12 @@ namespace NssApp.ViewModels
         {
             try
             {
-                var loginSettings = await _loggedInUserService.TryGetLoggedInUserSettings();
+                var loginSettings = await _loginService.GetCurrentLoginSettings();
                 if (loginSettings != null)
                 {
                     this.Url = loginSettings.BaseUrl;
                     this.Username = loginSettings.Username;
-                    this.Password = loginSettings.Password;
+                    this.Password = "";
                 }
                 else
                 {
@@ -77,7 +78,7 @@ namespace NssApp.ViewModels
         private async Task DoneEditingSettings()
         {
             this.LoginFaileMessage = string.Empty;
-            var signedInOK = await this._loggedInUserService.SignIn(this.Url, this.Username, this.Password);
+            var signedInOK = await this._loginService.SignInAsync(this.Url, this.Username, this.Password);
             if(signedInOK)
             {
                 Application.Current.MainPage = new Tabs();

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using NssApp.RestApi;
 using NssApp.ViewModels;
+using NssRestClient;
+using NssRestClient.Services;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -17,7 +19,7 @@ namespace NssApp
         public Machines()
         {
             InitializeComponent();
-            this.BindingContext = new MachineViewModel(new NssRestApiService(new UserCredentialStore(), new HttpClientFactory())).Initialize(this);
+            this.BindingContext = new MachineViewModel(new MachineService(new RestClient(new NssHttpClientFactory(), new ClientCredentialStore()))).Initialize(this);
         }
     }
 }

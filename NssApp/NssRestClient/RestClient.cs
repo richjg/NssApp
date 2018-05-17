@@ -2,6 +2,7 @@
 using NssRestClient.Dto;
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -31,6 +32,18 @@ namespace NssRestClient
         public Task<RestResult<T>> PostJsonAsync<T>(string url, object postData) => HandleResponse<T>(PostJsonAsync(url, postData));
         public Task<RestResult<T>> PutJsonAsync<T>(string url, object postData) => HandleResponse<T>(PutJsonAsync(url, postData));
         public Task<RestResult<T>> DeleteAsync<T>(string url) => HandleResponse<T>(DeleteAsync(url));
+        public async Task<LoginSettings> GetCurrentLoginSettings()
+        {
+            var nssConnectionState = await this.clientCredentialStore.GetAsync();
+            if (nssConnectionState == null)
+                return null;
+
+            return new LoginSettings
+            {
+                BaseUrl = nssConnectionState.BaseUrl,
+                Username = nssConnectionState.Username
+            };
+        }
 
         private Task<HttpResponseMessage> GetAsync(string url) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Get, url));
         private Task<HttpResponseMessage> PostJsonAsync(string url, object jsonPostObject) => SendWithAutoLoginRetryAsync(() => new HttpRequestMessage(HttpMethod.Post, url) { Content = new StringContent(JsonConvert.SerializeObject(jsonPostObject) ?? string.Empty, System.Text.Encoding.UTF8, "application/json") });
@@ -84,7 +97,7 @@ namespace NssRestClient
         {
             var result = await httpResponseMessage;
 
-            if (result.StatusCode == System.Net.HttpStatusCode.OK)
+            if (result.IsSuccessStatusCode)
             {
                 var apiResult = await result.ContentFromJsonAsync<ApiResult<T>>();
                 return apiResult.Data;

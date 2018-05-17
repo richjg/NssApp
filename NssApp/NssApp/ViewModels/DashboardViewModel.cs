@@ -8,18 +8,24 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ByteSizeLib;
+using NssRestClient.Services;
 using Xamarin.Forms;
 
 namespace NssApp.ViewModels
 {
     public class DashboardViewModel : INotifyPropertyChanged
     {
+        private readonly DashboardService dashboardService;
+        private readonly UtilizationService utilizationService;
+        private readonly SystemService systemService;
         public event PropertyChangedEventHandler PropertyChanged;
         private Page _CurrentPage;
 
-        public DashboardViewModel(NssRestApiService nssRestApiService)
+        public DashboardViewModel(DashboardService dashboardService, SystemService systemService, UtilizationService utilizationService)
         {
-            this.nssRestApiService = nssRestApiService;
+            this.dashboardService = dashboardService;
+            this.utilizationService = utilizationService;
+            this.systemService = systemService;
         }
 
         public DashboardViewModel Initialize(Page page)
@@ -58,8 +64,6 @@ namespace NssApp.ViewModels
         private List<DataSourceItem> _chartData;
         public List<DataSourceItem> ChartData { get => this._chartData; set => SetPropertyValue(ref _chartData, value, nameof(ChartData)); }
 
-        private readonly NssRestApiService nssRestApiService;
-
         public ICommand PullToRefreshCommand
         {
             get
@@ -81,7 +85,7 @@ namespace NssApp.ViewModels
             this.IsRefreshing = true;
             try
             {
-                var trafficLightCounts = await nssRestApiService.GetTrafficLightCounts().ResolveData(this._CurrentPage/*App.Current.MainPage*/);
+                var trafficLightCounts = await dashboardService.GetTrafficLightForSystem().ResolveData(this._CurrentPage);
                 if (trafficLightCounts != null)
                 {
                     AttentionTile = new Tile { Color = "#ea683c", Title = "Attention", Text = GetTrafficLightValue(trafficLightCounts.RedCount) };
@@ -89,11 +93,11 @@ namespace NssApp.ViewModels
                     ProtectedTile = new Tile { Color = "#bdcc2a", Title = "Protected", Text = GetTrafficLightValue(trafficLightCounts.GreenCount) };
                 }
 
-                IsUserMsp = (await nssRestApiService.GetCurrentUserInfo())?.IsMsp ?? false;
+                IsUserMsp = (await systemService.GetLoggedInUser().ResolveData(this._CurrentPage))?.IsMsp ?? false;
 
                 if (IsUserMsp)
                 {
-                    var systemUtilisationMonths = await nssRestApiService.GetSystemUtilisationMonths().ResolveData(this._CurrentPage);
+                    var systemUtilisationMonths = await utilizationService.GetSystemUtilisationMonths().ResolveData(this._CurrentPage);
 
                     if (systemUtilisationMonths != null)
                     {

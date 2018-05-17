@@ -11,5 +11,6 @@ namespace NssRestClient.Services
         Task<RestResult<List<ApiProtectionLevel>>> GetAvailableMachineProtectionLevels(int machineId);
         Task<RestResult<List<ApiBackupImage>>> GetMachineImages(int machineId);
         Task<RestResult<List<ApiMachineUtilisationMonth>>> GetMachineUtilisationMonths(int machineId);
+        Task<RestResult<ApiActivity>> ProtectMachine(int machineId, int protectionLevelId);
     }
 }
