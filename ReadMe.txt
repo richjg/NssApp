@@ -1,6 +1,7 @@
-1. Add Telerik Nuget Source  https://nuget.telerik.com/nuget
-2. Tools -> Android -> Android SDK Manager -> Android 8.1 - Oreo -> Select 'Android SDK Platform 27'
-3. Sort following error: 
+1. Control Panel -> Programs and features -> Visual Studio 2017 -> Right click and click change -> Click Individual components -> Ensure '.NET Framework 4.7.1 SDK' and '.NET Framework 4.7.1 targeting pack' are selected
+2. Add Telerik Nuget Source  https://nuget.telerik.com/nuget
+3. Tools -> Android -> Android SDK Manager -> Android 8.1 - Oreo -> Select 'Android SDK Platform 27'
+4. Sort following error: 
 	Severity	Code	Description	Project	File	Line	Suppression State
 	Error		An error occurred trying to install required android components on Project 'NssApp.Android'.
 	Project 'NssApp.Android' requires the following components installed on your machine: 
