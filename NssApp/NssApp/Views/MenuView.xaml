@@ -44,7 +44,7 @@
                 </StackLayout>
             </Grid>
             <Grid
-                Grid.Row="1">
+                Grid.Row="1" Opacity="0.6">
                 <ListView 
                     AutomationId="menu"
                     ItemsSource="{Binding MenuItems}" 

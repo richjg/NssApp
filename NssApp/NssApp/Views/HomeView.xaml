@@ -2,10 +2,9 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:telerikChart="clr-namespace:Telerik.XamarinForms.Chart;assembly=Telerik.XamarinForms.Chart"
-             x:Class="NssApp.Views.HomeView"
-             BackgroundColor="{StaticResource Color_BackgroundColor}">
+             x:Class="NssApp.Views.HomeView">
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="What is this"></ToolbarItem>
+        <ToolbarItem Text="NSS Self Service"></ToolbarItem>
     </ContentPage.ToolbarItems>
     <ContentPage.Content>
         <Grid Padding="5">

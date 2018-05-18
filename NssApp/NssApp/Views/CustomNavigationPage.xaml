@@ -8,8 +8,8 @@
     BarTextColor="{StaticResource Color_WhiteColor}">
     <NavigationPage.BarBackgroundColor>
         <OnPlatform x:TypeArguments="Color">
-            <On Platform="Android, iOS" Value="Transparent" />
-            <On Platform="UWP" Value="{StaticResource Color_BackgroundColor}" />
+            <On Platform="Android, iOS" Value="{StaticResource Color_VeritasRed}" />
+            <On Platform="UWP" Value="{StaticResource Color_VeritasRed}" />
         </OnPlatform>
     </NavigationPage.BarBackgroundColor>
 </NavigationPage>
