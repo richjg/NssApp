@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using FFImageLoading.Forms.Platform;
 using Foundation;
 using UIKit;
 
@@ -22,9 +23,19 @@ namespace NssApp.iOS
         public override bool FinishedLaunching(UIApplication app, NSDictionary options)
         {
             Xamarin.Forms.Forms.Init();
+            CachedImageRenderer.Init();
             LoadApplication(new App());
 
-            return base.FinishedLaunching(app, options);
+            base.FinishedLaunching(app, options);
+
+            UINavigationBar.Appearance.SetBackgroundImage(new UIImage(), UIBarMetrics.Default);
+            UINavigationBar.Appearance.ShadowImage = new UIImage();
+            UINavigationBar.Appearance.BackgroundColor = UIColor.Clear;
+            UINavigationBar.Appearance.TintColor = UIColor.White;
+            UINavigationBar.Appearance.BarTintColor = UIColor.Clear;
+            UINavigationBar.Appearance.Translucent = true;
+
+            return true;
         }
     }
 }

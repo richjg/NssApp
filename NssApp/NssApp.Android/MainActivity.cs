@@ -6,6 +6,7 @@ using Android.App;
 using Android.Content.PM;
 using Android.OS;
 
+
 namespace NssApp.Droid
 {
     [Activity(Label = "NssApp", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
@@ -20,6 +21,7 @@ namespace NssApp.Droid
 
             UserDialogs.Init(this);
             Xamarin.Forms.Forms.Init(this, bundle);
+            FFImageLoading.Forms.Platform.CachedImageRenderer.Init(false);
             LoadApplication(new App());
         }
     }

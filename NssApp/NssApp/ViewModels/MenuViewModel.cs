@@ -2,6 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -24,7 +26,7 @@ namespace NssApp.ViewModels
         private string _username;
         public string Username { get => this._username; set { this._username = value; this.OnPropertyChanged(); } }
 
-        public string UserAvatar => "Todo";
+        public string UserAvatar => GravitarUrl("richard.godfrey@biomni.com");
 
         public ObservableCollection<Models.MenuItem> MenuItems
         {
@@ -96,6 +98,32 @@ namespace NssApp.ViewModels
         private Task RemoveUserCredentials()
         {
             return this._loginService.SignOutAsync();
+        }
+
+        private string GravitarUrl(string emailAddress) => $"https://secure.gravatar.com/avatar/{GetMD5HashHex(emailAddress)}?d=404";
+
+        private string GetMD5HashHex(string inString)
+        {
+            using (MD5 md5 = new MD5CryptoServiceProvider())
+            {
+                Encoding encode = new ASCIIEncoding();
+                string outString = BinaryToHex(md5.ComputeHash(encode.GetBytes(inString)));
+                outString = outString.ToLower(CultureInfo.InvariantCulture);
+                return outString;
+            }
+
+            string BinaryToHex(byte[] data)
+            {
+                if (data == null)
+                    return string.Empty;
+
+                StringBuilder hexString = new StringBuilder(data.Length * 2);
+                for (int counter = 0; counter < data.Length; counter++)
+                {
+                    hexString.Append(String.Format("{0:X2}", data[counter]));
+                }
+                return hexString.ToString();
+            }
         }
     }
 }
