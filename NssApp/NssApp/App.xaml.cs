@@ -1,4 +1,6 @@
-﻿using System;
+﻿using NssApp.Navigation;
+using NssApp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,10 +10,27 @@ namespace NssApp
 {
     public partial class App : Application
     {
+        static App()
+        {
+            BuildDependencies();
+        }
+
         public App()
         {
             InitializeComponent();
-            MainPage = new SplashScreen();
+            InitNavigation();
+        }
+
+        public static void BuildDependencies()
+        {
+
+            Locator.Instance.Build();
+        }
+
+        private Task InitNavigation()
+        {
+            var navigationService = Locator.Instance.Resolve<INavigationService>();
+            return navigationService.NavigateToAsync<SplashScreenViewModel>();
         }
 
         protected override void OnStart()

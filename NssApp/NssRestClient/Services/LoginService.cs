@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace NssRestClient.Services
 {
-    public class LoginService
+    public class LoginService : ILoginService
     {
         private readonly IRestClient restClient;
 
@@ -20,5 +20,10 @@ namespace NssRestClient.Services
 
         public Task<LoginSettings> GetCurrentLoginSettings() => this.restClient.GetCurrentLoginSettings();
 
+        public async Task<bool> UserIsAuthenticatedAndValidAsync()
+        {
+            var result = await this.restClient.GetAsync<ApiUser>($"v6/system/user");
+            return result.LoginRequired == false;
+        }
     }
 }

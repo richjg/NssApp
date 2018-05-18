@@ -116,6 +116,12 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Acr.UserDialogs">
+      <Version>7.0.1</Version>
+    </PackageReference>
+    <PackageReference Include="Rg.Plugins.Popup">
+      <Version>1.1.4.158-pre</Version>
+    </PackageReference>
     <PackageReference Include="Xamarin.Essentials">
       <Version>0.6.0-preview</Version>
     </PackageReference>

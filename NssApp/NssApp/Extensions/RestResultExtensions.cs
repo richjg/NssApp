@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NssApp.Dialog;
 using NssRestClient.Dto;
 using Xamarin.Forms;
 
@@ -29,5 +30,20 @@ namespace NssApp.RestApi
         }
 
         public static Task<T> ResolveData<T>(this Task<RestResult<T>> restResultTask, Page page) => restResultTask.Match(valid: r => r, errors: e => App.GetHttpErrorMethod(page)(), loginRequired: App.GetLoginFailedMethod(page));
+
+        /// <summary>
+        /// If the Result result HasResult is true then the data is returned. If there errors or login is required the return is null and a message will be displayed on screen.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="restResultTask"></param>
+        /// <returns></returns>
+        public static Task<T> ResolveData<T>(this Task<RestResult<T>> restResultTask)
+        {
+            var dialogService = ViewModels.Locator.Instance.Resolve<IDialogService>();
+
+            return restResultTask.Match(valid: r => r,
+                                errors: e => dialogService.ShowAlertAsync("Connecting", "Hmm having trouble connecting to the server.", "Ok"),
+                                loginRequired: () => dialogService.ShowAlertAsync("Connecting", "Hmm having trouble connecting to the server. Goto setting's to take a look", "Ok"));
+        }
     }
 }

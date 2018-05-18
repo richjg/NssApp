@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MasterDetailPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NssApp.Views.MainView"
+             xmlns:pages="clr-namespace:NssApp.Views"
+             MasterBehavior="Popover"
+             Title="NSSMobile">
+    <MasterDetailPage.Master>
+        <pages:MenuView BindingContext="{Binding MenuViewModel}"/>
+    </MasterDetailPage.Master>
+    <MasterDetailPage.Detail>
+        <ContentPage BackgroundColor="Transparent" />
+    </MasterDetailPage.Detail>
+</MasterDetailPage>

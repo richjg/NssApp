@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:templates="clr-namespace:NssApp.Views.Templates;assembly=NssApp"
+             xmlns:behaviors="clr-namespace:NssApp.Behaviors;assembly=NssApp" 
+             x:Class="NssApp.Views.MenuView"
+             Title=" ">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <Style x:Key="UsernamePanelStyle" TargetType="StackLayout">
+                <Setter Property="Orientation" Value="Vertical" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="HelloTextStyle" TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource Color_WhiteColor}" />
+                <Setter Property="FontSize" Value="{StaticResource LargeSize}" />
+                <Setter Property="VerticalOptions" Value="End" />
+            </Style>
+
+            <Style x:Key="UsernameTextStyle" TargetType="Label">
+                <Setter Property="FontSize" Value="{StaticResource LargerSize}" />
+                <Setter Property="LineBreakMode" Value="TailTruncation" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <Grid
+            RowSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25*" />
+                <RowDefinition Height="75*" />
+            </Grid.RowDefinitions>
+            <Grid 
+                Grid.Row="0">
+                <Grid 
+                    BackgroundColor="#293849"
+                    Opacity="0.6"/>
+                <StackLayout Padding="44, 0, 0, 10" Spacing="0" Style="{StaticResource UsernamePanelStyle}">
+                    <Label Text="Hello" Style="{StaticResource HelloTextStyle}" />
+                    <Label Text="{Binding Username}" Style="{StaticResource UsernameTextStyle}" />
+                </StackLayout>
+            </Grid>
+            <Grid
+                Grid.Row="1">
+                <ListView 
+                    AutomationId="menu"
+                    ItemsSource="{Binding MenuItems}" 
+                    CachingStrategy="RecycleElement"
+                    SeparatorVisibility="None"
+                    HasUnevenRows="True"
+                    behaviors:ItemTappedCommandListView.ItemTappedCommand="{Binding MenuItemSelectedCommand}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <templates:MenuItemTemplate />
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
