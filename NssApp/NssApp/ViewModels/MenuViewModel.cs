@@ -21,7 +21,8 @@ namespace NssApp.ViewModels
             InitMenuItems();
         }
 
-        public string Username { get; set; }
+        private string _username;
+        public string Username { get => this._username; set { this._username = value; this.OnPropertyChanged(); } }
 
         public string UserAvatar => "Todo";
 
