@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NssApp.Views.Templates.ComputerItemTemplate">
+  <ContentView.Content>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Grid.Column="0">
+                <Label FontFamily="{StaticResource FontAwesome}" Text="&#xF108;" TextColor="{Binding BackgroundColor}" FontSize="Large" VerticalTextAlignment="Center" Margin="2" WidthRequest="30"></Label>
+            </Grid>
+            <Grid Grid.Row="0" Grid.Column="1">
+                <Label Text="{Binding DisplayName}" FontSize="Medium" VerticalTextAlignment="Center" LineBreakMode="TailTruncation" />
+            </Grid>
+        </Grid>
+  </ContentView.Content>
+</ContentView>

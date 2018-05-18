@@ -11,7 +11,22 @@ namespace Xamarin.Forms
         public AsyncCommand(Func<Task> execute) : base(() => execute())
         {
         }
-        public AsyncCommand(Func<object, Task> execute) : base(() => execute(null))
+        public AsyncCommand(Func<object, Task> execute) : base((o) => execute(o))
+        {
+        }
+    }
+
+    public class AsyncCommand<T> : Command
+    {
+        public AsyncCommand(Func<T, Task> execute) : base((o) => execute((T)o))
+        {
+        }
+
+        public AsyncCommand(Func<T, Task> execute, Func<T, bool> canExecute) : base((o) => execute((T)o), (o) => canExecute((T)o))
+        {
+        }
+
+        public AsyncCommand(Func<Task> execute, Func<T, bool> canExecute) : base((o) => execute(), (o) => canExecute((T)o))
         {
         }
     }

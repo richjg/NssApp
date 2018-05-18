@@ -1,12 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" ios:Page.UseSafeArea="true"
+             xmlns:templates="clr-namespace:NssApp.Views.Templates;assembly=NssApp"
+             xmlns:behaviors="clr-namespace:NssApp.Behaviors;assembly=NssApp"
              x:Class="NssApp.Views.ComputerListView">
     <ContentPage.Content>
-        <StackLayout>
-            <Label Text="Welcome to Xamarin.Forms!"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
-        </StackLayout>
+        <Grid RowSpacing="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Entry Placeholder="Search" Text="{Binding SearchText, Mode=TwoWay}"></Entry>
+            </Grid>
+            <Grid Grid.Row="1">
+                <ListView 
+                        AutomationId="list"
+                        ItemsSource="{Binding MachineCollection}"  
+                        CachingStrategy="RecycleElement"
+                        SeparatorVisibility="None"
+                        HasUnevenRows="True" 
+                        IsRefreshing="{Binding IsBusy}"
+                        behaviors:ItemTappedCommandListView.ItemTappedCommand="{Binding MachineSelectedCommand}">
+                    <ListView.Behaviors>
+                        <behaviors:ListViewPagingBehavior Command="{Binding LoadMoreCommand}"></behaviors:ListViewPagingBehavior>
+                    </ListView.Behaviors>
+
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <templates:ComputerItemTemplate />
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </Grid>
     </ContentPage.Content>
 </ContentPage>
