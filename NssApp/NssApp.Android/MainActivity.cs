@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Acr.UserDialogs;
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
@@ -17,6 +18,7 @@ namespace NssApp.Droid
 
             base.OnCreate(bundle);
 
+            UserDialogs.Init(this);
             Xamarin.Forms.Forms.Init(this, bundle);
             LoadApplication(new App());
         }

@@ -41,9 +41,11 @@ namespace NssApp.RestApi
         {
             var dialogService = ViewModels.Locator.Instance.Resolve<IDialogService>();
 
+            //Maybe we could change this... have IConnectionStateService - that stores (static) connection state issue... then the ui could show an icon on the nav bar ?
+
             return restResultTask.Match(valid: r => r,
-                                errors: e => dialogService.ShowAlertAsync("Connecting", "Hmm having trouble connecting to the server.", "Ok"),
-                                loginRequired: () => dialogService.ShowAlertAsync("Connecting", "Hmm having trouble connecting to the server. Goto setting's to take a look", "Ok"));
+                                errors: e => dialogService.ShowAlertAsync("Hmm having trouble connecting to the server.", "Connecting", "Ok"),
+                                loginRequired: () => dialogService.ShowAlertAsync("Hmm having trouble connecting to the server. Goto setting's to take a look", "Connecting", "Ok"));
         }
     }
 }
