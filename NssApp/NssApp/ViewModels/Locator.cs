@@ -20,6 +20,10 @@ namespace NssApp.ViewModels
         {
             _container = new UnityContainer();
 
+            /*
+             Register up types here for DI
+             In NavigationService.CreatePageViewModelMappings - Add Mapping For ViewModel To View
+             */
 
             _container.RegisterType<INavigationService, NavigationService>();
             _container.RegisterType<IDialogService, DialogService>();
@@ -37,50 +41,6 @@ namespace NssApp.ViewModels
             _container.RegisterType<LoginViewModel>();
             _container.RegisterType<MenuViewModel>();
             _container.RegisterType<MainViewModel>();
-
-            //_containerBuilder.RegisterType<AnalyticService>().As<IAnalyticService>();
-            //_containerBuilder.RegisterType<DialogService>().As<IDialogService>();
-            //_containerBuilder.RegisterType<NavigationService>().As<INavigationService>();
-            //_containerBuilder.RegisterType<FakeChartService>().As<IChartService>();
-            //_containerBuilder.RegisterType<AuthenticationService>().As<IAuthenticationService>();
-            //_containerBuilder.RegisterType<LocationService>().As<ILocationService>();
-            //_containerBuilder.RegisterType<OpenUriService>().As<IOpenUriService>();
-            //_containerBuilder.RegisterType<RequestService>().As<IRequestService>();
-            //_containerBuilder.RegisterType<DefaultBrowserCookiesService>().As<IBrowserCookiesService>();
-            //_containerBuilder.RegisterType<GravatarUrlProvider>().As<IAvatarUrlProvider>();
-            //_containerBuilder.RegisterType(typeof(SettingsService)).As(typeof(ISettingsService<RemoteSettings>));
-
-            //if (AppSettings.UseFakes)
-            //{
-            //    _containerBuilder.RegisterType<FakeBookingService>().As<IBookingService>();
-            //    _containerBuilder.RegisterType<FakeHotelService>().As<IHotelService>();
-            //    _containerBuilder.RegisterType<FakeNotificationService>().As<INotificationService>();
-            //    _containerBuilder.RegisterType<FakeSuggestionService>().As<ISuggestionService>();
-            //}
-            //else
-            //{
-            //    _containerBuilder.RegisterType<BookingService>().As<IBookingService>();
-            //    _containerBuilder.RegisterType<HotelService>().As<IHotelService>();
-            //    _containerBuilder.RegisterType<NotificationService>().As<INotificationService>();
-            //    _containerBuilder.RegisterType<SuggestionService>().As<ISuggestionService>();
-            //}
-
-            //_containerBuilder.RegisterType<BookingCalendarViewModel>();
-            //_containerBuilder.RegisterType<BookingHotelViewModel>();
-            //_containerBuilder.RegisterType<BookingHotelsViewModel>();
-            //_containerBuilder.RegisterType<BookingViewModel>();
-            //_containerBuilder.RegisterType<CheckoutViewModel>();
-            //_containerBuilder.RegisterType<HomeViewModel>();
-            //_containerBuilder.RegisterType<LoginViewModel>();
-            //_containerBuilder.RegisterType<MainViewModel>();
-            //_containerBuilder.RegisterType<MenuViewModel>();
-            //_containerBuilder.RegisterType<MyRoomViewModel>();
-            //_containerBuilder.RegisterType<NotificationsViewModel>();
-            //_containerBuilder.RegisterType<OpenDoorViewModel>();
-            //_containerBuilder.RegisterType<SuggestionsViewModel>();
-
-            //_containerBuilder.RegisterType(typeof(SettingsViewModel<RemoteSettings>));
-            //_containerBuilder.RegisterType<ExtendedSplashViewModel>();
         }
 
         public T Resolve<T>()
