@@ -22,3 +22,6 @@
 	XA5210 Please install package: 'Xamarin.Android.Support.v8' available in SDK installer. Native library file 'C:\Users\craig\AppData\Local\Xamarin\Xamarin.Android.Support.v8.RenderScript\24\content\android-N/renderscript/lib/packaged/armeabi-v7a/libRSSupport.so' doesn't exist.
 	XA5210 Please install package: 'Xamarin.Android.Support.v8' available in SDK installer. Native library file 'C:\Users\craig\AppData\Local\Xamarin\Xamarin.Android.Support.v8.RenderScript\24\content\android-N/renderscript/lib/packaged/x86/librsjni.so' doesn't exist.
 	XA5210 Please install package: 'Xamarin.Android.Support.v8' available in SDK installer. Native library file 'C:\Users\craig\AppData\Local\Xamarin\Xamarin.Android.Support.v8.RenderScript\24\content\android-N/renderscript/lib/packaged/x86/libRSSupport.so' doesn't exist.		 	0	
+
+
+	reference code: https://github.com/Microsoft/SmartHotel360-mobile-desktop-apps
